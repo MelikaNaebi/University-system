@@ -1,0 +1,20 @@
+﻿namespace University_system.Models
+{
+    public class Course
+    {
+
+        public int Id { get; set; }
+
+        public string  Title { get; set; }
+
+        public string Unit { get; set; }
+
+        public int InstructorId { get; set; }
+        public Instructor Instructor { get; set; }
+
+        public int SemasterId { get; set; }
+        public Semaster Semaster { get; set; }
+
+        public ICollection<Enrollment> Enrollments { get; set; }
+    }
+}
