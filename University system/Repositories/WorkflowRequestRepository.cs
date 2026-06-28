@@ -11,9 +11,9 @@ namespace University_system.Repositories
         
         }
 
-        public async Task<IEnumerable<WorkflowRequest>> GetWorkFlowRequestsbyStudentNumber(string studentnumber,int semesterId)
+        public async Task<IEnumerable<WorkflowRequest>> GetWorkFlowRequestsByStudentIdAsync(int studentId,int semesterId)
         {
-            return await _dbSet.Where(w =>w.Student.StudentNumber==studentnumber && w.SemesterId==semesterId).ToListAsync();
+            return await _dbSet.Where(w =>w.Student.Id==studentId && w.SemesterId==semesterId).ToListAsync();
         }
     }
 }

@@ -9,6 +9,9 @@
 
         public string Unit { get; set; }
 
+        public int Capacity { get; set; }     
+        public int EnrolledCount { get; set; }
+
         public int InstructorId { get; set; }
         public Instructor Instructor { get; set; }
 

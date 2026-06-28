@@ -5,6 +5,6 @@ namespace University_system.Interfaces
     public interface IStudentRepository :IGenericRepository<Student>
 
     {
-        Task<Student> GetStudentByNumberWithDetailsAsync(string studentnumber);
+        Task<Student> GetStudentWithUserAsync(int studentId );
     }
 }

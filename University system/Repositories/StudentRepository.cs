@@ -12,9 +12,9 @@ namespace University_system.Repositories
             {
             }
 
-        public async Task<Student> GetStudentByNumberWithDetailsAsync(string studentnumber)
+        public async Task<Student> GetStudentWithUserAsync(int studentId)
         {
-            return await _dbSet.Where(s => s.StudentNumber == studentnumber).FirstOrDefaultAsync();
+            return await _dbSet.Where(s => s.Id == studentId).FirstOrDefaultAsync();
         }
     }
     }

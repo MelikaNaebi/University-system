@@ -24,5 +24,15 @@ namespace University_system.Repositories
         .Where(e => e.StudentId == studentId && e.Course.SemasterId == semesterId)
         .ToListAsync();
         }
+
+        public async Task<Enrollment> GetEnrollmentAsync(int studenId, int courseId)
+        {
+            return await _dbSet.FirstOrDefaultAsync(e =>e.StudentId==studenId && e.CourseId==courseId);
+        }
+
+        public async Task<bool> IsStudentEnrolledAsync(int studentId, int courseId)
+        {
+            return  await _dbSet.AnyAsync(e=>e.StudentId==studentId && e.CourseId==courseId);
+        }
     }
 }

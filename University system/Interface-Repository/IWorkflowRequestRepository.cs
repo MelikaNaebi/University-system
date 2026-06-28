@@ -5,6 +5,6 @@ namespace University_system.Interface_Repository
 {
     public interface IWorkflowRequestRepository : IGenericRepository<WorkflowRequest>
     {
-        Task<IEnumerable<WorkflowRequest>> GetWorkFlowRequestsbyStudentNumber(string studentnumber , int semesterId);
+        Task<IEnumerable<WorkflowRequest>> GetWorkFlowRequestsByStudentIdAsync(int studentId , int semesterId);
     }
 }
