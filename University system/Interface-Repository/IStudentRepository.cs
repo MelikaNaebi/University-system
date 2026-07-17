@@ -6,5 +6,7 @@ namespace University_system.Interfaces
 
     {
         Task<Student> GetStudentWithUserAsync(int studentId );
+        Task<int> GetStudentIdByUserIdAsync(string userId);
+
     }
 }

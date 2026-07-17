@@ -13,7 +13,7 @@ namespace University_system.Data
         public DbSet<Course> Courses { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
 
-        public DbSet<Semaster> Semasters { get; set; }
+        public DbSet<Semester> Semesters { get; set; }
         public DbSet<Student> Students { get; set; }
 
         public DbSet<Instructor> Instructors { get; set; }
@@ -33,9 +33,9 @@ namespace University_system.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Course>()
-                .HasOne(c =>c.Semaster)
+                .HasOne(c =>c.Semester)
                 .WithMany(s =>s.Courses)
-                .HasForeignKey(c =>c.SemasterId)
+                .HasForeignKey(c =>c.SemesterId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Enrollment>()
@@ -85,7 +85,7 @@ namespace University_system.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<WorkflowRequest>()
-                .HasOne(w=>w.Semaster)
+                .HasOne(w=>w.Semester)
                 .WithMany(s => s.WorkflowRequests)
                 .HasForeignKey(w =>w.SemesterId)
                 .OnDelete(DeleteBehavior.Restrict);

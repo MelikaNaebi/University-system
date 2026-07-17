@@ -1,6 +1,6 @@
 ﻿namespace University_system.Models
 {
-    public class Semaster
+    public class Semester
     {
         public int Id { get; set; }
         public string Name { get; set; }

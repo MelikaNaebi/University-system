@@ -6,6 +6,8 @@ namespace University_system.Interface_Service
     {
         Task<StudentProfileDto> GetStudentProfileAsync(int studentId);
 
+        Task<SemesterTranscriptDto> GetSemesterTranscriptAsync(int studentId, int semesterId);
 
+        Task<FullTranscriptDto> GetFullTranscriptAsync(int studentId);
     }
 }

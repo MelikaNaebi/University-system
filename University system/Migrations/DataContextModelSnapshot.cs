@@ -172,7 +172,7 @@ namespace University_system.Migrations
                     b.Property<int>("InstructorId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SemasterId")
+                    b.Property<int>("SemesterId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -187,7 +187,7 @@ namespace University_system.Migrations
 
                     b.HasIndex("InstructorId");
 
-                    b.HasIndex("SemasterId");
+                    b.HasIndex("SemesterId");
 
                     b.ToTable("Courses");
                 });
@@ -274,7 +274,7 @@ namespace University_system.Migrations
                     b.ToTable("Instructors");
                 });
 
-            modelBuilder.Entity("University_system.Models.Semaster", b =>
+            modelBuilder.Entity("University_system.Models.Semester", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -291,7 +291,7 @@ namespace University_system.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Semasters");
+                    b.ToTable("Semesters");
                 });
 
             modelBuilder.Entity("University_system.Models.Student", b =>
@@ -493,15 +493,15 @@ namespace University_system.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("University_system.Models.Semaster", "Semaster")
+                    b.HasOne("University_system.Models.Semester", "Semester")
                         .WithMany("Courses")
-                        .HasForeignKey("SemasterId")
+                        .HasForeignKey("SemesterId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Instructor");
 
-                    b.Navigation("Semaster");
+                    b.Navigation("Semester");
                 });
 
             modelBuilder.Entity("University_system.Models.Department", b =>
@@ -573,7 +573,7 @@ namespace University_system.Migrations
 
             modelBuilder.Entity("University_system.Models.WorkflowRequest", b =>
                 {
-                    b.HasOne("University_system.Models.Semaster", "Semaster")
+                    b.HasOne("University_system.Models.Semester", "Semester")
                         .WithMany("WorkflowRequests")
                         .HasForeignKey("SemesterId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -585,7 +585,7 @@ namespace University_system.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Semaster");
+                    b.Navigation("Semester");
 
                     b.Navigation("Student");
                 });
@@ -607,7 +607,7 @@ namespace University_system.Migrations
                     b.Navigation("Courses");
                 });
 
-            modelBuilder.Entity("University_system.Models.Semaster", b =>
+            modelBuilder.Entity("University_system.Models.Semester", b =>
                 {
                     b.Navigation("Courses");
 

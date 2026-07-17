@@ -8,7 +8,9 @@ namespace University_system.Interface_Repository
         IEnrollmentRepository Enrollments { get; } 
         IStudentRepository Students { get; }
         IWorkflowRequestRepository WorkflowRequests { get; }
+        ISemesterRepository Semesters { get; }
 
+        IInstructorRepository Instructors { get; }
 
 
         Task<int> CompleteAsync();

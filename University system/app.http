@@ -1,0 +1,21 @@
+﻿# درخواست ورود برای گرفتن توکن
+POST https://localhost:7246/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "111111",
+  "password": "Password123!"
+}
+
+###
+
+# درخواست کارنامه کل (بعد از گرفتن توکن از درخواست بالا، آن را اینجا کپی کنید)
+GET https://localhost:7246/api/student/Fulltranscrip
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJ1c2VyX3N0dWRlbnRfMDEiLCJ1bmlxdWVfbmFtZSI6IjExMTExMSIsImdpdmVuX25hbWUiOiLZhdmE24zaqdinINmG2KfbjNio24wiLCJyb2xlIjoiU3R1ZGVudCIsIlN0dWRlbnRJZCI6IjMiLCJuYmYiOjE3ODQyODMyNjEsImV4cCI6MTc4NDI4NDE2MSwiaWF0IjoxNzg0MjgzMjYxLCJpc3MiOiJVbml2ZXJzaXR5U3lzdGVtQVBJIiwiYXVkIjoiVW5pdmVyc2l0eVN5c3RlbUFuZ3VsYXJPclJlYWN0In0.BJ66gxQbO0RC4kbAEW_2eVgsN9M5gwsznja5xVqhXPI
+Accept: application/json
+
+###
+# ۴. تست متد کارنامه ترمی (GetSemesterTranscript)
+GET https://localhost:7246/api/student/transcript/semester?semesterId=1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJ1c2VyX3N0dWRlbnRfMDEiLCJ1bmlxdWVfbmFtZSI6IjExMTExMSIsImdpdmVuX25hbWUiOiLZhdmE24zaqdinINmG2KfbjNio24wiLCJyb2xlIjoiU3R1ZGVudCIsIlN0dWRlbnRJZCI6IjMiLCJuYmYiOjE3ODQyODQ5NjEsImV4cCI6MTc4NDI4NTg2MSwiaWF0IjoxNzg0Mjg0OTYxLCJpc3MiOiJVbml2ZXJzaXR5U3lzdGVtQVBJIiwiYXVkIjoiVW5pdmVyc2l0eVN5c3RlbUFuZ3VsYXJPclJlYWN0In0.9EGUW_xlJOylpt9EAkWszb2B1gjJ_2Bnr0eFbHElVJs
+Accept: application/json

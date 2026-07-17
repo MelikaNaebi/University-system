@@ -1,0 +1,140 @@
+﻿<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold text-white">گزارش کارنامه تحصیلی</h4>
+</div>
+
+<!-- کارت‌های خلاصه وضعیت کل دوره -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card bg-dark text-white border-secondary">
+            <div class="card-body text-center">
+                <h6 class="text-white-50">معدل کل (CGPA)</h6>
+                <h3 class="fw-bold text-success" id="lblOverallGPA">---</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-dark text-white border-secondary">
+            <div class="card-body text-center">
+                <h6 class="text-white-50">کل واحدهای گذرانده شده</h6>
+                <h3 class="fw-bold text-info" id="lblOverallPassedUnits">0 واحد</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-dark text-white border-secondary">
+            <div class="card-body text-center">
+                <h6 class="text-white-50">وضعیت کلی تحصیلی</h6>
+                <h3 class="fw-bold text-warning" id="lblOverallStatus">---</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ناوبری تب‌ها (Tabs Navigation) -->
+<ul class="nav nav-tabs border-secondary mb-3" id="transcriptTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active text-white bg-transparent border-0 border-bottom border-primary fw-bold" id="overall-tab" data-bs-toggle="tab" data-bs-target="#overallTranscript" type="button" role="tab" aria-controls="overallTranscript" aria-selected="true">
+            <i class="bi bi-collection-play me-1"></i> خلاصه وضعیت ترم‌ها (کارنامه کل)
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link text-white bg-transparent border-0 border-bottom border-primary fw-bold" id="semester-tab" data-bs-toggle="tab" data-bs-target="#semesterTranscriptPane" type="button" role="tab" aria-controls="semesterTranscriptPane" aria-selected="false">
+            <i class="bi bi-calendar3 me-1"></i> ریز نمرات ترمی (کارنامه ترمی)
+        </button>
+    </li>
+</ul>
+
+<!-- محتوای تب‌ها (Tab Content) -->
+<div class="tab-content" id="transcriptTabsContent">
+
+    <!-- ۱. تب کارنامه کل -->
+    <div class="tab-pane fade show active" id="overallTranscript" role="tabpanel" aria-labelledby="overall-tab">
+        <div class="card bg-dark text-white border-secondary">
+            <div class="card-body p-0">
+                <table class="table table-dark table-hover mb-0 text-center align-middle">
+                    <thead>
+                        <tr class="text-secondary" style="border-bottom: 2px solid #334155; background-color: #0f172a;">
+                            <th style="width: 10%">ردیف</th>
+                            <th style="width: 25%">نام نیمسال</th>
+                            <th style="width: 20%">تعداد واحد اخذ شده</th>
+                            <th style="width: 25%">معدل ترم</th>
+                            <th style="width: 20%">وضعیت</th>
+                        </tr>
+                    </thead>
+                    <tbody id="overallTranscriptTableBody">
+                        <tr>
+                            <td colspan="5" class="py-4 text-info">
+                                <span class="spinner-border spinner-border-sm me-2"></span>در حال بارگذاری کارنامه کل...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ۲. تب کارنامه ترمی (جدید و متناسب با خروجی بک‌آند) -->
+    <div class="tab-pane fade" id="semesterTranscriptPane" role="tabpanel" aria-labelledby="semester-tab">
+        <div class="card bg-dark text-white border-secondary mb-3">
+            <div class="card-body">
+                <div class="row align-middle g-3">
+                    <div class="col-md-4">
+                        <label for="ddlSemesters" class="form-label text-white-50 small">انتخاب نیمسال تحصیلی:</label>
+                        <select id="ddlSemesters" class="form-select bg-dark text-white border-secondary">
+                            <option value="">در حال دریافت ترم‌ها...</option>
+                        </select>
+                    </div>
+                    <div class="col-md-8 d-flex align-items-end justify-content-md-end">
+                        <!-- هدر وضعیت خلاصه‌ای ترم انتخابی مبتنی بر فیلدهای خروجی جی‌سان شما -->
+                        <div id="semesterSummaryBadges" class="d-none">
+                            <span class="badge bg-secondary p-2 me-2">تعداد واحد ترم: <strong id="lblSemCredits">0</strong></span>
+                            <span class="badge bg-primary p-2 me-2">معدل ترم: <strong id="lblSemGPA">0</strong></span>
+                            <span class="badge bg-success p-2" id="lblSemStatusBadge">وضعیت: <strong id="lblSemStatus">---</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card bg-dark text-white border-secondary">
+            <div class="card-body p-0">
+                <table class="table table-dark table-hover mb-0 text-center align-middle">
+                    <thead>
+                        <tr class="text-secondary" style="border-bottom: 2px solid #334155; background-color: #0f172a;">
+                            <th style="width: 15%">کد درس</th>
+                            <th style="width: 40%">نام درس</th>
+                            <th style="width: 15%">تعداد واحد</th>
+                            <th style="width: 15%">نمره</th>
+                            <th style="width: 15%">وضعیت</th>
+                        </tr>
+                    </thead>
+                    <tbody id="semesterTranscriptTableBody">
+                        <tr>
+                            <td colspan="5" class="py-4 text-muted">لطفاً یک ترم را انتخاب کنید.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- استایل اختصاصی برای تب‌های فعال هماهنگ با تم تاریک پروژه -->
+<style>
+    .nav-tabs .nav-link {
+        border-radius: 0 !important;
+        transition: all 0.2s ease-in-out;
+    }
+
+        .nav-tabs .nav-link:hover {
+            border-bottom: 2px solid #3b82f6 !important;
+            color: #3b82f6 !important;
+        }
+
+        .nav-tabs .nav-link.active {
+            border-bottom: 2px solid #3b82f6 !important;
+            color: #3b82f6 !important;
+            font-weight: bold;
+        }
+</style>

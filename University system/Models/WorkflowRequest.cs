@@ -15,6 +15,6 @@
         public Student Student { get; set; }
 
         public int SemesterId { get; set; }
-        public Semaster Semaster { get; set; }
+        public Semester Semester { get; set; }
     }
 }

@@ -1,0 +1,53 @@
+﻿function loadCoursesforEnrollment() {
+    const tbody = document.getElementById("enrollmentTableBody");
+    const apiUrl = "https://localhost:7246/api/Student/available";
+
+    if (!tbody) return; // اگر جدول در صفحه وجود نداشت متوقف شود
+
+    fetch(apiUrl, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        }
+    })
+        .then(response => {
+            if (response.status === 401) {
+                alert("نشست شما منقضی شده است. لطفا دوباره وارد شوید.");
+                localStorage.removeItem("token");
+                window.location.href = "login.html";
+                return;
+            }
+            if (!response.ok) throw new Error("خطا در دریافت اطلاعات از سرور");
+            return response.json();
+        })
+        .then(register => {
+            tbody.innerHTML = "";
+
+            if (!register || register.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="py-4 text-warning">هیچ درسی در این ترم ثبت نشده است.</td></tr>`;
+                return;
+            }
+
+                const row = document.createElement("tr");
+                row.innerHTML = `
+<td>${index + 1}</td>
+<td><code class="text-info">CRS-${course.courseId}</code></td>
+<td class="text-start ps-4 fw-bold">${course.courseTitle}</td>
+<td>${unitCount} واحد</td>
+<td>${course.instructorName || 'بدون استاد'}</td>
+<td>${course.semesterName }</td>
+
+<td>${remainingCapacity}ظرفیت باقی مانده</td>
+
+
+                `;
+                tbody.appendChild(row);
+            });
+
+        })
+        .catch(error => {
+            console.error("خطای رخ داده در فرچ:", error);
+            tbody.innerHTML = `<tr><td colspan="6" class="py-4 text-danger">خطا در بارگذاری اطلاعات: ${error.message}</td></tr>`;
+        });
+}

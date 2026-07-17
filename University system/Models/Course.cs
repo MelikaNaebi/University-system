@@ -15,8 +15,8 @@
         public int InstructorId { get; set; }
         public Instructor Instructor { get; set; }
 
-        public int SemasterId { get; set; }
-        public Semaster Semaster { get; set; }
+        public int SemesterId { get; set; }
+        public Semester Semester { get; set; }
 
         public ICollection<Enrollment> Enrollments { get; set; }
     }

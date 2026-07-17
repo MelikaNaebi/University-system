@@ -1,0 +1,23 @@
+﻿### تنظیمات متغیرها
+@hostname = localhost
+@port = 7246
+@host = https://{{hostname}}:{{port}}
+
+### ۱. ورود به سیستم و گرفتن توکن
+# @name LoginRequest
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "inst_01",
+  "password": "Password123!"
+}
+
+###
+### ذخیره خودکار توکن
+@token = {{LoginRequest.response.body.token}}
+
+#### ۲. تست متد دریافت لیست درس‌های ترم جاری استاد
+GET {{host}}/api/Instructor/semester-courses
+Authorization: Bearer
+Accept: application/json

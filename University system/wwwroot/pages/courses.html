@@ -1,0 +1,33 @@
+﻿<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold text-white mb-0">لیست دروس ترم جاری</h4>
+    <span class="badge bg-success px-3 py-2" id="lblTotalUnits">تعداد واحد ثبت‌شده: ۰</span>
+</div>
+
+<div class="card bg-dark border-secondary shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle mb-0 text-center" id="tblCourses">
+                <thead class="table-light text-dark">
+                    <tr>
+                        <th style="width: 8%">#</th>
+                        <th style="width: 15%">کد درس</th>
+                        <th style="width: 30%" class="text-start ps-4">نام درس</th>
+                        <th style="width: 12%">تعداد واحد</th>
+                        <th style="width: 20%">استاد مربوطه</th>
+                        <th style="width: 15%">وضعیت</th>
+                    </tr>
+                </thead>
+                <tbody id="coursesTableBody">
+                    <!-- دیتا توسط جاوااسکریپت اینجا رندر می‌شود -->
+                    <tr id="tableLoader">
+                        <td colspan="6" class="py-5 text-muted">
+                            <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+                            در حال دریافت لیست دروس از سرور...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

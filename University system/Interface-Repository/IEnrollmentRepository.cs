@@ -9,6 +9,8 @@ namespace University_system.Interface_Repository
 
         Task<IEnumerable<Enrollment>> GetAllStudentEnrollmentsAsync(int studentId);
 
+        Task<IEnumerable<Enrollment>> GetStudentCoursesForActiveSemesterAsync(int studentId);
+
         Task <bool> IsStudentEnrolledAsync(int studentId,int courseId);
 
         Task <Enrollment> GetEnrollmentAsync(int studenId,int courseId);

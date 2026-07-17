@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using University_system.Data;
+using University_system.Dtos;
 using University_system.Interface_Repository;
 using University_system.Models;
 
@@ -21,7 +22,7 @@ namespace University_system.Repositories
         .Include(e => e.Course)
         .ThenInclude(c => c.Instructor)
         .ThenInclude(i => i.User)
-        .Where(e => e.StudentId == studentId && e.Course.SemasterId == semesterId)
+        .Where(e => e.StudentId == studentId && e.Course.SemesterId == semesterId)
         .ToListAsync();
         }
 
@@ -33,6 +34,19 @@ namespace University_system.Repositories
         public async Task<bool> IsStudentEnrolledAsync(int studentId, int courseId)
         {
             return  await _dbSet.AnyAsync(e=>e.StudentId==studentId && e.CourseId==courseId);
+        }
+
+        public async Task<IEnumerable<Enrollment>> GetStudentCoursesForActiveSemesterAsync(int studentId)
+        {
+            // var activeSemester = await _dbSet.GetCurrentSemesterAsync();
+
+            var activeSemester = await _context.Semesters
+        .Where(s => s.IsCurrent)
+        .Select(s => s.Id)
+        .FirstOrDefaultAsync();
+
+
+            return await _dbSet.Include(e => e.Course).ThenInclude(c => c.Instructor).Where(e => e.StudentId == studentId && e.Course.SemesterId == activeSemester).ToListAsync(); ;
         }
     }
 }

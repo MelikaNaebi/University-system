@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using System.Diagnostics;
 using University_system.Dtos;
 using University_system.Interface_Repository;
 using University_system.Interface_Service;
@@ -23,7 +24,7 @@ namespace University_system.Services
 
             if (enrollment == null) return false;
 
-            var course = await _unitOfWork.Courses.GetById(courseId);
+            var course = await _unitOfWork.Courses.GetByIdAsync(courseId);
 
             _unitOfWork.Enrollments.Delete(enrollment);
 
@@ -38,15 +39,24 @@ namespace University_system.Services
 
         }
 
-        public async Task<bool> EnrollCourse(int courseId, int studentId)
+        public async Task<bool> EnrollCourseAsync(int courseId, int studentId)
         {
-            var course= await _unitOfWork.Courses.GetById(courseId);
+            var course = await _unitOfWork.Courses.GetByIdAsync(courseId);
+            if (course == null)
+            {
+                throw new KeyNotFoundException("درس مورد نظر در سیستم یافت نشد.");
+            }
 
-            if(course.EnrolledCount >=course.Capacity) { return false; }
+            if(course.EnrolledCount >=course.Capacity) {
+
+                throw new InvalidOperationException("ظرفیت این درس تکمیل شده است.");
+            }
 
             var isAlreadyEnrolled = await _unitOfWork.Enrollments.IsStudentEnrolledAsync(studentId, courseId);
 
-            if (isAlreadyEnrolled) return false;
+            if (isAlreadyEnrolled) {
+                throw new InvalidOperationException("شما قبلاً این درس را اخذ کرده‌اید.");
+            }
 
             var enrollment = new Enrollment { StudentId = studentId, CourseId = courseId };
             await _unitOfWork.Enrollments.AddAsync(enrollment);
@@ -55,21 +65,70 @@ namespace University_system.Services
             _unitOfWork.Courses.Update(course);
 
             var result = await _unitOfWork.CompleteAsync();
-
-            return result > 0;
-
+            if (result <= 0)
+            {
+                throw new Exception("خطای غیرمنتظره‌ای در ثبت اطلاعات در دیتابیس رخ داد.");
+            }
+            return true;
         }
 
-        public async Task<IEnumerable<EnrolledCourseDto>> GetEnrolledCourses(int studentId)
+        public async Task<IEnumerable<EnrolledCourseDto>> GetAllEnrolledCoursesAsync(int studentId)
         {
+
+
             var enrollments = await _unitOfWork.Enrollments.GetAllStudentEnrollmentsAsync(studentId);
 
-            var courses = enrollments.Select(e => e.Course).ToList();
-
-            var courseDtos = _mapper.Map<IEnumerable<EnrolledCourseDto>>(courses);
+            var courseDtos = _mapper.Map<IEnumerable<EnrolledCourseDto>>(enrollments);
             return courseDtos;
         }
 
-      
+        public async Task<IEnumerable<EnrolledCourseDto>> GetStudentCoursesBySemesterAsync(int studentId, int semesterId)
+        {
+
+            var enrollments = await _unitOfWork.Enrollments.GetStudentCoursesBySemesterAsync(studentId, semesterId);
+
+            var courseDtos = _mapper.Map<IEnumerable<EnrolledCourseDto>>(enrollments);
+            return courseDtos;
+        }
+
+        public async Task<IEnumerable<EnrolledCourseDto>> GetStudentCoursesForActiveSemesterAsync(int studentId)
+        {
+            // ریپازیتوری شما خودش userId را می‌گیرد و لیست دروس را آماده برمی‌گرداند
+            var enrollments = await _unitOfWork.Enrollments.GetStudentCoursesForActiveSemesterAsync(studentId);
+
+            if (enrollments == null)
+            {
+                throw new Exception("دروسی برای این دانشجو در ترم فعال یافت نشد.");
+            }
+            var enrollmentsDto = _mapper.Map<IEnumerable<EnrolledCourseDto>>(enrollments);
+
+            return enrollmentsDto;
+        }
+
+        public async Task<bool> SubmitGradeByInstructorAsync(int enrollmentId, double grade)
+        {
+            var Enrolledcourse = await _unitOfWork.Enrollments.GetByIdAsync(enrollmentId);
+            if (Enrolledcourse == null)
+            {
+                return false;
+            }
+
+            Enrolledcourse.Grade = grade;
+            var result = await _unitOfWork.CompleteAsync();
+            return result > 0;
+        }
+
+        public async Task<bool> UpdateGradeAsync(int enrollmentId, double newGrade)
+        {
+            var enrollment = await _unitOfWork.Enrollments.GetByIdAsync(enrollmentId);
+            if (enrollment == null)
+            {
+                return false;
+            }
+
+            enrollment.Grade = newGrade;
+            var result = await _unitOfWork.CompleteAsync();
+            return result > 0;
+        }
     }
 }
