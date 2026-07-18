@@ -1,0 +1,550 @@
+﻿<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد مدیر گروه | سامانه دانشگاهی</title>
+
+    <link rel="stylesheet" href="css/bootstrap.rtl.min.css">
+
+    <link rel="stylesheet" href="css/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="css/all.min.css">
+</head>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            min-height: 100vh;
+            background-color: #212529;
+            color: #fff;
+        }
+
+            .sidebar .nav-link {
+                color: #dee2e6;
+                padding: 12px 20px;
+                border-radius: 5px;
+                margin: 5px 10px;
+                cursor: pointer;
+            }
+
+                .sidebar .nav-link:hover, .sidebar .nav-link.active {
+                    background-color: #0d6efd;
+                    color: #fff;
+                }
+
+        .card-stat {
+            border: none;
+            border-radius: 10px;
+            transition: transform 0.2s;
+        }
+
+            .card-stat:hover {
+                transform: translateY(-5px);
+            }
+
+        .main-section {
+            display: none;
+        }
+
+            .main-section.active-section {
+                display: block;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar p-0 shadow">
+                <div class="position-sticky pt-3">
+                    <div class="text-center py-3 mb-4 border-bottom border-secondary">
+                        <i class="fa-solid fa-user-gear fa-3x mb-2 text-primary"></i>
+                        <h5 class="m-0">پنل مدیر گروه</h5>
+                        <small class="text-muted" id="managerBadge">مدیر محترم گروه</small>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" onclick="switchSection('create-course-sec', this)">
+                                <i class="bi bi-plus-circle me-2"></i> تعریف درس جدید
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" onclick="switchSection('reports-sec', this)">
+                                <i class="bi bi-graph-up-arrow me-2"></i> گزارش‌گیری دانشجویان
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" onclick="switchSection('requests-sec', this)">
+                                <i class="bi bi-envelope-paper me-2"></i> بررسی درخواست‌ها
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-danger mt-3" href="#" onclick="logout()">
+                                <i class="fa-solid fa-right-from-bracket me-2"></i> خروج از سیستم
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-9 me-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h3 text-secondary" id="pageTitle">تعریف درس جدید</h1>
+                    <span class="badge bg-secondary p-2" id="currentSemesterBadge">ترم جاری: در حال بارگذاری...</span>
+                </div>
+
+         
+
+                <section id="create-course-sec" class="main-section active-section">
+                    <div class="card shadow-sm border-0 mb-4">
+                        <div class="card-header bg-white py-3 border-bottom">
+                            <h5 class="card-title fw-bold m-0 text-secondary">
+                                <i class="bi bi-filter me-2 text-primary"></i> مشخصات درس جدید را وارد کنید
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="createCourseForm" onsubmit="handleCreateCourse(event)">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">عنوان درس</label>
+                                        <input type="text" id="courseTitle" class="form-control" required placeholder="مثال: انتقال داده">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label fw-semibold">تعداد واحد</label>
+                                        <select id="courseUnit" class="form-select" required>
+                                            <option value="1">۱ واحد</option>
+                                            <option value="2">۲ واحد</option>
+                                            <option value="3" selected>۳ واحد</option>
+                                            <option value="4">۴ واحد</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label fw-semibold">ظرفیت کلاس</label>
+                                        <input type="number" id="courseCapacity" class="form-control" min="1" value="40" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">شناسه ترم </label>
+                                        <input type="number" id="courseSemesterId" class="form-control" value="1" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">شناسه استاد </label>
+                                        <input type="number" id="courseInstructorId" class="form-control" placeholder="شناسه عددی استاد را وارد کنید" required>
+                                    </div>
+                                    <div class="col-12 text-end mt-4">
+                                        <button type="submit" class="btn btn-primary px-4">
+                                            <i class="bi bi-check2-all me-1"></i> ثبت و ایجاد درس جدید
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="reports-sec" class="main-section">
+                    <div class="card shadow-sm border-0 mb-4">
+                        <div class="card-header bg-white py-3 border-bottom">
+                            <h5 class="card-title fw-bold m-0 text-secondary">
+                                <i class="bi bi-filter me-2 text-primary"></i>فیلترهای گزارش‌گیری پیشرفته
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <label class="form-label small fw-semibold">شماره دانشجویی</label>
+                                    <input type="text" id="filterStudentNumber" class="form-control form-control-sm" placeholder="جستجوی شماره...">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small fw-semibold">نام یا نام خانوادگی</label>
+                                    <input type="text" id="filterName" class="form-control form-control-sm" placeholder="جستجوی نام...">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small fw-semibold">وضعیت معدل ترم</label>
+                                    <select id="filterStatus" class="form-select form-select-sm">
+                                        <option value="All">همه دانشجویان</option>
+                                        <option value="Probation">دانشجویان مشروط (معدل زیر ۱۲)</option>
+                                        <option value="Top">دانشجویان ممتاز (معدل بالای ۱۷)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small fw-semibold">ترم تحصیلی</label>
+                                    <input type="number" id="filterSemesterId" class="form-control form-control-sm" value="1">
+                                </div>
+                                <div class="col-12 text-end">
+                                    <button class="btn btn-sm btn-primary px-4" onclick="fetchStudentsReport()">
+                                        <i class="fa-solid fa-magnifying-glass me-1"></i> اعمال فیلتر و تهیه گزارش
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow-sm border-0 mb-4">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0 text-center">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>شماره دانشجویی</th>
+                                            <th>نام و نام خانوادگی</th>
+                                            <th>معدل وزنی ترم</th>
+                                            <th>وضعیت تحصیلی ترم</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="reportTableBody">
+                                        <tr>
+                                            <td colspan="4" class="text-center p-4 text-muted">جهت نمایش نتایج، دکمه تهیه گزارش را کلیک کنید.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="requests-sec" class="main-section">
+                    <div class="card shadow-sm border-0 mb-4">
+                        <div class="card-header bg-white py-3 border-bottom">
+                            <h5 class="card-title fw-bold m-0 text-secondary">
+                                <i class="bi bi-plus-square me-2 text-primary"></i> تعریف قالب گردش کار جدید
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="createTemplateForm" onsubmit="handleCreateTemplate(event)">
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <input type="text" id="tplName" class="form-control" placeholder="نام قالب" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" id="tplDesc" class="form-control" placeholder="توضیحات قالب" required>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select id="tplApproval" class="form-select">
+                                            <option value="true">نیاز به تایید کارشناس آموزشی</option>
+                                            <option value="false">بدون نیاز به تایید</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            <i class="bi bi-plus-lg"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card shadow-sm border-0 mb-4">
+                        <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between">
+                            <h5 class="card-title fw-bold m-0 text-secondary">
+                                <i class="bi bi-filter me-2 text-primary"></i>لیست قالب‌های گردش کار
+                            </h5>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="fetchTemplates()">بروزرسانی</button>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle text-center mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>نام قالب</th>
+                                            <th>توضیحات</th>
+                                            <th>نیاز به تایید استاد؟</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="templatesTableBody">
+                                        <tr><td colspan="3" class="p-4 text-muted">در حال بارگذاری قالب‌ها...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow-sm border-0 mb-4">
+                        <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between">
+                            <h5 class="card-title fw-bold m-0 text-secondary">
+                                <i class="fa-solid fa-list-check me-2 text-primary"></i> کارتابل بررسی درخواست‌ها
+                            </h5>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="fetchPendingRequests()">بروزرسانی</button>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle text-center mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>نام دانشجو</th>
+                                            <th>نوع درخواست</th>
+                                            <th>شرح</th>
+                                            <th>عملیات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="requestsTableBody">
+                                        <tr><td colspan="4" class="p-4 text-muted">در حال بارگذاری درخواست‌ها...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+
+    <script>
+    const BASE_URL = 'https://localhost:7246/api';
+
+    document.addEventListener("DOMContentLoaded", function () {
+        fetchTemplates();
+        fetchCurrentSemester();
+        fetchPendingRequests();
+    });
+
+    function switchSection(sectionId, element) {
+        document.querySelectorAll('.main-section').forEach(s => s.classList.remove('active-section'));
+        document.getElementById(sectionId).classList.add('active-section');
+
+        document.querySelectorAll('.sidebar .nav-link').forEach(link => link.classList.remove('active'));
+        element.classList.add('active');
+
+        document.getElementById('pageTitle').innerText = element.innerText.trim();
+    }
+
+    async function fetchTemplates() {
+        const token = localStorage.getItem("token");
+        const tbody = document.getElementById("templatesTableBody");
+
+        try {
+            const res = await fetch(`${BASE_URL}/Student/workflow-templates`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (res.ok) {
+                const templates = await res.json();
+                tbody.innerHTML = "";
+
+                if (templates.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="3" class="p-3 text-muted">قالبی تعریف نشده است.</td></tr>`;
+                    return;
+                }
+
+                templates.forEach(tpl => {
+                    tbody.innerHTML += `
+                    <tr>
+                        <td>${tpl.name}</td>
+                        <td>${tpl.description || '-'}</td>
+                        <td><span class="badge ${tpl.requiresStaffApproval ? 'bg-info' : 'bg-secondary'}">
+                            ${tpl.requiresStaffApproval ? 'بله' : 'خیر'}
+                        </span></td>
+                    </tr>`;
+                });
+            } else {
+                tbody.innerHTML = `<tr><td colspan="3" class="text-danger">خطا در دریافت لیست قالب‌ها</td></tr>`;
+            }
+        } catch (error) {
+            tbody.innerHTML = `<tr><td colspan="3" class="text-danger">عدم اتصال به سرور</td></tr>`;
+        }
+    }
+
+    async function fetchCurrentSemester() {
+        const token = localStorage.getItem("token");
+        const badge = document.getElementById("currentSemesterBadge");
+
+        try {
+            const response = await fetch(`${BASE_URL}/DepartmentHead/current-semester`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const semesterId = data.semesterId || data;
+                let semesterText = (semesterId === 1) ? "نیمسال اول ۱۴۰۵-۱۴۰۶" : 
+                                   (semesterId === 2) ? "نیمسال دوم ۱۴۰۵-۱۴۰۶" : `ترم ${semesterId}`;
+                badge.innerText = `ترم جاری: ${semesterText}`;
+            } else {
+                badge.innerText = "ترم جاری: خطا در دریافت";
+            }
+        } catch (error) {
+            badge.innerText = "ترم جاری: عدم اتصال به سرور";
+        }
+    }
+
+    async function handleCreateCourse(event) {
+        event.preventDefault();
+        const token = localStorage.getItem("token");
+
+        const courseData = {
+            title: document.getElementById("courseTitle").value,
+            unit: document.getElementById("courseUnit").value,
+            capacity: parseInt(document.getElementById("courseCapacity").value),
+            semesterId: parseInt(document.getElementById("courseSemesterId").value),
+            instructorId: parseInt(document.getElementById("courseInstructorId").value)
+        };
+
+        try {
+            const response = await fetch(`${BASE_URL}/DepartmentHead/create-course`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(courseData)
+            });
+
+            if (response.ok) {
+                alert("🥳 درس جدید با موفقیت ثبت شد.");
+                document.getElementById("createCourseForm").reset();
+            } else {
+                const errData = await response.json();
+                alert("❌ خطا: " + (errData.message || "اطلاعات را چک کنید."));
+            }
+        } catch (error) {
+            alert("⚠️ خطا در اتصال به سرور.");
+        }
+    }
+
+    async function fetchStudentsReport() {
+        const token = localStorage.getItem("token");
+        const tbody = document.getElementById("reportTableBody");
+
+        const filterPayload = {
+            studentNumber: document.getElementById("filterStudentNumber").value,
+            name: document.getElementById("filterName").value,
+            statusFilter: document.getElementById("filterStatus").value,
+            semesterId: parseInt(document.getElementById("filterSemesterId").value)
+        };
+
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center p-4 text-muted">در حال استعلام...</td></tr>`;
+
+        try {
+            const response = await fetch(`${BASE_URL}/DepartmentHead/students-report`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(filterPayload)
+            });
+
+            if (!response.ok) throw new Error();
+            const data = await response.json();
+            tbody.innerHTML = "";
+
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center p-4 text-warning">هیچ دانشجویی یافت نشد.</td></tr>`;
+                return;
+            }
+
+            data.forEach(std => {
+                let badgeColor = (std.status === "مشروط") ? "bg-danger" : (std.status === "ممتاز") ? "bg-success" : "bg-secondary";
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="fw-bold">${std.studentNumber}</td>
+                        <td class="text-end ps-5">${std.fullName}</td>
+                        <td><span class="badge bg-light text-dark px-3 py-2 fw-bold">${std.gpa}</span></td>
+                        <td><span class="badge ${badgeColor} px-3 py-2">${std.status}</span></td>
+                    </tr>`;
+            });
+        } catch (error) {
+            tbody.innerHTML = `<tr><td colspan="4" class="text-center text-danger p-4">❌ خطا در ارتباط با سرور.</td></tr>`;
+        }
+    }
+
+    async function handleCreateTemplate(event) {
+        event.preventDefault();
+        const token = localStorage.getItem("token");
+
+        const payload = {
+            name: document.getElementById("tplName").value,
+            description: document.getElementById("tplDesc").value,
+            requiresStaffApproval: document.getElementById("tplApproval").value === 'true'
+        };
+
+        try {
+            const res = await fetch(`${BASE_URL}/DepartmentHead/create-workflow-template`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                alert("قالب با موفقیت تعریف شد.");
+                document.getElementById("createTemplateForm").reset();
+                fetchTemplates();
+            } else {
+                alert("خطا در تعریف قالب.");
+            }
+        } catch (error) {
+            alert("خطا در ارتباط با سرور.");
+        }
+    }
+
+    async function fetchPendingRequests() {
+        const token = localStorage.getItem("token");
+        const tbody = document.getElementById("requestsTableBody");
+        const semesterId = 1;
+
+        tbody.innerHTML = `<tr><td colspan="4">در حال دریافت...</td></tr>`;
+
+        try {
+            const res = await fetch(`${BASE_URL}/DepartmentHead/pending-workflow-requests?semesterId=${semesterId}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                tbody.innerHTML = "";
+                data.forEach(req => {
+                    tbody.innerHTML += `
+                    <tr>
+                        <td>${req.studentName}</td>
+                        <td>${req.workflowName}</td>
+                        <td>${req.description}</td>
+                        <td>
+                            <button class="btn btn-sm btn-success" onclick="reviewRequest(${req.id}, true)">تایید</button>
+                            <button class="btn btn-sm btn-danger" onclick="reviewRequest(${req.id}, false)">رد</button>
+                        </td>
+                    </tr>`;
+                });
+            }
+        } catch (error) {
+            tbody.innerHTML = `<tr><td colspan="4" class="text-danger">خطا در دریافت لیست</td></tr>`;
+        }
+    }
+
+    async function reviewRequest(requestId, isApproved) {
+        const token = localStorage.getItem("token");
+        try {
+            const res = await fetch(`${BASE_URL}/DepartmentHead/review-workflow-request`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ requestId, isApproved })
+            });
+
+            if (res.ok) {
+                alert("عملیات با موفقیت انجام شد.");
+                fetchPendingRequests();
+            } else {
+                alert("خطا در ثبت عملیات.");
+            }
+        } catch (error) {
+            alert("خطا در ارتباط با سرور.");
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem("token");
+        window.location.href = "login.html";
+    }
+</script>
+</body>
+</html>

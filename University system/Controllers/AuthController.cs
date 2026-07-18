@@ -20,10 +20,7 @@ namespace University_system.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
          {
-            //// 🛑 کد موقت: هش دقیق سیستم شما را تولید می‌کند و به عنوان پیام خطا برمی‌گرداند
-            //var hasher = new Microsoft.AspNetCore.Identity.PasswordHasher<Microsoft.AspNetCore.Identity.IdentityUser>();
-            //string exactHash = hasher.HashPassword(new Microsoft.AspNetCore.Identity.IdentityUser(), "Password123!");
-            //return BadRequest(new { message = $"🎯 HASH: {exactHash}" });
+            
 
             var result = await _authService.LoginAsync(loginDto);
             if (!result.IsSuccess)

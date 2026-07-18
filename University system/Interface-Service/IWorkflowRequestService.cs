@@ -4,8 +4,21 @@ namespace University_system.Interface_Service
 {
     public interface IWorkflowRequestService
     {
-        Task<bool> CreateRequestAsync(int studentId, int semesterId, string title, string description);
+        Task<bool> CreateRequestAsync(int studentId, int semesterId, int templateId, string title, string description);
 
-        Task<IEnumerable<WorkflowRequestDto>> GetStudentRequestsAsync(int studentId,int semesterId);
+        Task<IEnumerable<WorkflowRequestDto>> GetStudentRequestsAsync(int studentId, int semesterId);
+
+        Task<bool> ReviewByStaffAsync(ReviewWorkflowRequestDto dto);
+
+        Task<bool> ReviewByManagerAsync(ReviewWorkflowRequestDto dto);
+
+        Task<IEnumerable<WorkflowRequestDto>> GetStaffCartableAsync(int semesterId);
+
+        Task<IEnumerable<WorkflowRequestDto>> GetManagerCartableAsync(int semesterId);
+
+
+        Task<bool> CreateTemplateAsync(CreateTemplateDto dto);
+
+        Task<IEnumerable<WorkflowTemplateDto>> GetAllTemplatesAsync();
     }
 }

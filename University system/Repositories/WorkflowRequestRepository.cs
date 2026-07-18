@@ -7,13 +7,46 @@ namespace University_system.Repositories
 {
     public class WorkflowRequestRepository:GenericRepository<WorkflowRequest>,IWorkflowRequestRepository
     {
-        public WorkflowRequestRepository(DataContext context):base(context) { 
-        
+        public WorkflowRequestRepository(DataContext context) : base(context) { }
+
+
+    public async Task<IEnumerable<WorkflowRequest>> GetWorkFlowRequestsByStudentIdAsync(int studentId, int semesterId)
+        {
+            return await _dbSet
+    .Include(w => w.WorkflowTemplate)
+    .Include(w => w.Student)             
+        .ThenInclude(s => s.User)       
+    .Where(w => w.StudentId == studentId && w.SemesterId == semesterId)
+    .OrderByDescending(w => w.CreatedAt)
+    .ToListAsync();
         }
 
-        public async Task<IEnumerable<WorkflowRequest>> GetWorkFlowRequestsByStudentIdAsync(int studentId,int semesterId)
+        public async Task<IEnumerable<WorkflowRequest>> GetPendingRequestsForStaffAsync(int semesterId)
         {
-            return await _dbSet.Where(w =>w.Student.Id==studentId && w.SemesterId==semesterId).ToListAsync();
+            return await _dbSet
+                .Include(w => w.WorkflowTemplate) 
+                .Include(w => w.Student)
+                    .ThenInclude(s => s.User)    
+                .Where(w => w.SemesterId == semesterId && w.Status == "Pending")
+                .OrderBy(w => w.CreatedAt)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<WorkflowRequest>> GetPendingRequestsForManagerAsync(int semesterId)
+        {
+            return await _dbSet
+                .Include(w => w.WorkflowTemplate) 
+                .Include(w => w.Student)
+                    .ThenInclude(s => s.User)   
+                .Where(w => w.SemesterId == semesterId && w.Status == "ApprovedByStaff")
+                .OrderBy(w => w.CreatedAt)
+                .ToListAsync();
+        }
+        public async Task<WorkflowRequest> GetByIdAsync(int id)
+        {
+            return await _dbSet
+                .Include(w => w.WorkflowTemplate).FirstOrDefaultAsync(w => w.Id == id);
+
         }
     }
 }

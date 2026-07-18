@@ -1,0 +1,34 @@
+﻿### تنظیمات متغیرها
+@hostname = localhost
+@port = 7246
+@host = https://{{hostname}}:{{port}}
+
+
+### ۱. ورود به سیستم و گرفتن توکن
+### تست لاگین کارشناس آموزش و دریافت توکن جدید
+POST {{host}}/api/Auth/login
+Content-Type: application/json
+
+{
+  "username": "staff_test",
+  "password": "Password123!"
+}
+
+### ۳. دریافت کارتابل درخواست‌های معلق برای کارشناس آموزش (دیدن وضعیت Submitted)
+GET {{host}}/api/Staff/workflow-requests-cartable?semesterId=1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI4MDlCQkREQi0wRTMzLTRGREUtOUY1Qi02REEyMjVEQTMwRjkiLCJ1bmlxdWVfbmFtZSI6InN0YWZmX3Rlc3QiLCJnaXZlbl9uYW1lIjoi2qnYp9ix2LTZhtin2LMg2KLZhdmI2LLYtCIsInJvbGUiOiJTdGFmZiIsIlN0YWZmSWQiOiI4MDlCQkREQi0wRTMzLTRGREUtOUY1Qi02REEyMjVEQTMwRjkiLCJuYmYiOjE3ODQzOTUyNjksImV4cCI6MTc4NDM5NjE2OSwiaWF0IjoxNzg0Mzk1MjY5LCJpc3MiOiJVbml2ZXJzaXR5U3lzdGVtQVBJIiwiYXVkIjoiVW5pdmVyc2l0eVN5c3RlbUFuZ3VsYXJPclJlYWN0In0.-_VvqBYteKciQKyRdM1z7P_GuXZo_e4ubh42HGZAtY8
+Accept: application/json
+
+
+### ۴. بررسی، تایید اولیه یا رد توسط کارشناس آموزش (تغییر وضعیت به ApprovedByStaff)
+POST {{host}}/api/Staff/review-workflow-request
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI4MDlCQkREQi0wRTMzLTRGREUtOUY1Qi02REEyMjVEQTMwRjkiLCJ1bmlxdWVfbmFtZSI6InN0YWZmX3Rlc3QiLCJnaXZlbl9uYW1lIjoi2qnYp9ix2LTZhtin2LMg2KLZhdmI2LLYtCIsInJvbGUiOiJTdGFmZiIsIlN0YWZmSWQiOiI4MDlCQkREQi0wRTMzLTRGREUtOUY1Qi02REEyMjVEQTMwRjkiLCJuYmYiOjE3ODQzOTUyNjksImV4cCI6MTc4NDM5NjE2OSwiaWF0IjoxNzg0Mzk1MjY5LCJpc3MiOiJVbml2ZXJzaXR5U3lzdGVtQVBJIiwiYXVkIjoiVW5pdmVyc2l0eVN5c3RlbUFuZ3VsYXJPclJlYWN0In0.-_VvqBYteKciQKyRdM1z7P_GuXZo_e4ubh42HGZAtY8
+Content-Type: application/json
+
+{
+  "requestId": 1,
+  "isApproved": true,
+  "comment": "مدارک دانشجو چک شد و مشکلی برای اخذ درس ندارد."
+}
+
+###

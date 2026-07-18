@@ -8,5 +8,7 @@ namespace University_system.Interfaces
         Task<Student> GetStudentWithUserAsync(int studentId );
         Task<int> GetStudentIdByUserIdAsync(string userId);
 
+        Task<List<Student>> GetFilteredStudentsAsync(string? studentNumber, string? name);
+
     }
 }

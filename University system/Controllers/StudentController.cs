@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using University_system.Dtos;
 using University_system.Interface_Service;
-using University_system.Models;
-using University_system.Services;
 
 namespace University_system.Controllers
 {
@@ -17,13 +13,16 @@ namespace University_system.Controllers
         private readonly IStudentService _studentService;
         private readonly IEnrollmentService _enrollmentService;
         private readonly ICourseService _courseService;
+        private readonly IWorkflowRequestService _workflowRequestService;
 
-        public StudentController(IStudentService studentService, ICourseService courseService,IEnrollmentService enrollmentService)
+        public StudentController(IStudentService studentService, IWorkflowRequestService workflowRequestService, ICourseService courseService, IEnrollmentService enrollmentService)
         {
             _studentService = studentService;
             _enrollmentService = enrollmentService;
             _courseService = courseService;
+            _workflowRequestService = workflowRequestService;
         }
+
         [HttpGet("Fulltranscrip")]
         public async Task<IActionResult> GetFullTranscript()
         {
@@ -42,7 +41,7 @@ namespace University_system.Controllers
         }
 
         [HttpGet("transcript/semester")]
-        public async Task<IActionResult> GetSemesterTranscript( int semesterId)
+        public async Task<IActionResult> GetSemesterTranscript(int semesterId)
         {
             var studentIdClaim = User.FindFirst("StudentId")?.Value;
 
@@ -78,14 +77,12 @@ namespace University_system.Controllers
         }
 
         [HttpGet("available")]
-
         public async Task<IActionResult> GetCoursesForEnroll()
         {
-            try { 
-            
-            var courses = await _courseService.GetAvailableCoursesAsync();
+            try
+            {
+                var courses = await _courseService.GetAvailableCoursesAsync();
                 return Ok(courses);
-
             }
             catch (Exception ex)
             {
@@ -118,20 +115,8 @@ namespace University_system.Controllers
         }
 
         [HttpPost("enroll")]
-
         public async Task<IActionResult> Enroll([FromBody] EnrolledCourseDto enrolledCourseDto)
         {
-
-            //////
-            /////
-            //var claims = User.Claims.Select(c => new { c.Type, c.Value }).ToList();
-            //Console.WriteLine("--- Claims in Token ---");
-            //foreach (var claim in claims)
-            //{
-            //    Console.WriteLine($"{claim.Type}: {claim.Value}");
-            //}
-            ///////
-            /////
             var studentIdClaim = User.FindFirst("StudentId")?.Value;
 
             if (string.IsNullOrEmpty(studentIdClaim))
@@ -146,16 +131,37 @@ namespace University_system.Controllers
             {
                 var result = await _enrollmentService.EnrollCourseAsync(enrolledCourseDto.CourseId, studentId);
                 return Ok(result);
-
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
+        }
 
-           
+        [HttpGet("my-workflow-requests")]
+        public async Task<IActionResult> GetStudentRequests([FromQuery] int studentId, [FromQuery] int semesterId)
+        {
+            var requests = await _workflowRequestService.GetStudentRequestsAsync(studentId, semesterId);
+            return Ok(requests);
+        }
+
+        [HttpPost("submit-workflow-request")]
+        public async Task<IActionResult> CreateRequest([FromQuery] int studentId, [FromQuery] int semesterId, [FromBody] CreateWorkflowRequestDto dto)
+        {
+            if (dto == null || string.IsNullOrEmpty(dto.Title))
+                return BadRequest("اطلاعات درخواست ناقص است.");
+
+            var success = await _workflowRequestService.CreateRequestAsync(studentId, semesterId, dto.TemplateId, dto.Title, dto.Description);
+            if (!success) return BadRequest("خطا در ثبت درخواست. لطفاً قالب انتخابی را بررسی کنید.");
+
+            return Ok(new { message = "درخواست با موفقیت ثبت و وارد چرخه بررسی شد." });
+        }
+
+        [HttpGet("workflow-templates")]
+        public async Task<IActionResult> GetAllTemplates()
+        {
+            var templates = await _workflowRequestService.GetAllTemplatesAsync();
+            return Ok(templates);
         }
     }
 }
-       
-

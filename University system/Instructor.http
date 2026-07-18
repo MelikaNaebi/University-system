@@ -34,7 +34,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJBQjhEO
 Content-Type: application/json
 
 {
-    "studentId": 6,
-    "courseId": 10,
-    "grade": 18.5
+    "title":
+    "unit": 6,
+    "capacity": 10,
+    "semesterId": 18.5,
+    "instructorId":
+
 }

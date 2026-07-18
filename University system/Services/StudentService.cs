@@ -19,6 +19,17 @@ namespace University_system.Services
             _mapper = mapper;
         }
 
+        public async Task<int> GetCurrentSemesterIdAsync()
+        {
+            var currentSemesterId = await _unitOfWork.Semesters.GetCurrentSemesterAsync();
+            if (currentSemesterId == 0)
+            {
+                throw new InvalidOperationException("هیچ ترمی در سیستم به عنوان ترم جاری (IsCurrent) فعال نشده است.");
+            }
+
+            return currentSemesterId;
+        }
+
         public async Task<FullTranscriptDto> GetFullTranscriptAsync(int studentId)
         {
             var Enrolledcourses= await _unitOfWork.Enrollments.GetAllStudentEnrollmentsAsync(studentId);
@@ -57,11 +68,11 @@ namespace University_system.Services
 
             transcriptDto.Courses = semesterCourses.Select(e => new EnrolledCourseDto
             {
-                 Id = e.Id, // شناسه خود رکورد ثبت نام (EnrollmentId)
+                 Id = e.Id, 
                  CourseId = e.CourseId,
                  Grade = e.Grade,
-                  CourseTitle = e.Course?.Title ?? "نامشخص", // نام فیلد در دیتابیس (Title یا Name)
-                    CourseUnit = e.Course?.Unit ?? "0",        // تعداد واحد درس به صورت رشته
+                  CourseTitle = e.Course?.Title ?? "نامشخص", 
+                    CourseUnit = e.Course?.Unit ?? "0",       
                   InstructorName = e.Course?.Instructor?.User != null
                  ? $"{e.Course.Instructor.User.FirstName} {e.Course.Instructor.User.LastName}"
     : "نامشخص"
@@ -79,6 +90,56 @@ namespace University_system.Services
             return _mapper.Map<StudentProfileDto>(studentProfile);
 
         }
+
+        public async Task<List<StudentReportResponseDto>> GetStudentsReportAsync(StudentReportFilterDto filter)
+        {
+            var students = await _unitOfWork.Students.GetFilteredStudentsAsync(filter.StudentNumber, filter.Name);
+
+            var resultList = new List<StudentReportResponseDto>();
+            foreach (var student in students)
+            {
+                var semesterEnrollments = student.Enrollments
+                    .Where(e => e.Course.SemesterId == filter.SemesterId && e.Grade != null)
+                    .ToList();
+
+                if (!semesterEnrollments.Any()) continue;
+
+                double totalWeightedGrades = 0;
+                int totalUnits = 0;
+
+                foreach (var enrollment in semesterEnrollments)
+                {
+                    if (int.TryParse(enrollment.Course.Unit, out int courseUnit))
+                    {
+                        totalWeightedGrades += enrollment.Grade.Value * courseUnit;
+                        
+                        totalUnits += courseUnit;
+                    }
+                }
+
+                double semesterGpa = totalUnits > 0 ? totalWeightedGrades / totalUnits : 0;
+                semesterGpa = Math.Round(semesterGpa, 2);
+
+                string status = "عادی";
+                if (semesterGpa < 12) status = "مشروط";
+                else if (semesterGpa >= 17) status = "ممتاز";
+
+                if (filter.StatusFilter.ToLower() == "probation" && status != "مشروط") continue;
+                if (filter.StatusFilter.ToLower() == "top" && status != "ممتاز") continue;
+
+                resultList.Add(new StudentReportResponseDto
+                {
+                    Id = student.Id,
+                    StudentNumber = student.StudentNumber,
+                    FullName = student.User.FirstName + " " + student.User.LastName,
+                    GPA = semesterGpa,
+                    Status = status
+                });
+            }
+
+            return resultList;
+        }
+
         private SemesterTranscriptDto CalculateSemesterTranscript(int semesterId, IEnumerable<Enrollment> semesterEnrollments)
         {
 

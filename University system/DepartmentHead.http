@@ -1,0 +1,71 @@
+﻿### تنظیمات متغیرها
+@hostname = localhost
+@port = 7246
+@host = https://{{hostname}}:{{port}}
+
+### ۱. ورود به سیستم و گرفتن توکن
+# @name LoginRequest
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin2026",
+  "password": "Password123!"
+}
+
+### تست متد ایجاد درس 
+
+POST {{host}}/api/DepartmentHead/create-course
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI1MkQ3MUQ3MC03ODBELTQ2QjYtQTA1Ny00QzExMTE2QTczN0YiLCJ1bmlxdWVfbmFtZSI6ImFkbWluMjAyNiIsImdpdmVuX25hbWUiOiLZhdiv24zYsSDYs9uM2LPYqtmFIiwicm9sZSI6IkRlcGFydG1lbnRIZWFkIiwibmJmIjoxNzg0MzY5NjgzLCJleHAiOjE3ODQzNzA1ODMsImlhdCI6MTc4NDM2OTY4MywiaXNzIjoiVW5pdmVyc2l0eVN5c3RlbUpXVCIsImF1ZCI6IlVuaXZlcnNpdHlTeXN0ZW1Bbmd1bGFyT3JSZWFjdCJ9.dNEwmnJCDb6V1hW0-1XeV5C3-sKfCLURBXuCVocg_tI
+Content-Type: application/json
+
+{   "title":"انتقال داده",
+    "unit": "3",
+    "capacity": 40,
+    "semesterId": 1,
+    "instructorId":8
+}
+
+### تست متد گزارش گیری
+POST {{host}}/api/DepartmentHead/students-report
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI1MkQ3MUQ3MC03ODBELTQ2QjYtQTA1Ny00QzExMTE2QTczN0YiLCJ1bmlxdWVfbmFtZSI6ImFkbWluMjAyNiIsImdpdmVuX25hbWUiOiLZhdiv24zYsSDYs9uM2LPYqtmFIiwicm9sZSI6IkRlcGFydG1lbnRIZWFkIiwibmJmIjoxNzg0MzczMDAzLCJleHAiOjE3ODQzNzM5MDMsImlhdCI6MTc4NDM3MzAwMywiaXNzIjoiVW5pdmVyc2l0eVN5c3RlbUFQSSIsImF1ZCI6IlVuaXZlcnNpdHlTeXN0ZW1Bbmd1bGFyT3JSZWFjdCJ9.tiKK3p_A8ddMmumQMSF7cnvUfCQiGF2n6sOzQDxihCo
+Content-Type: application/json
+
+{   
+  "studentNumber": "",
+  "name": "امیر",
+  "statusFilter": "All",
+  "semesterId": 1
+}
+
+### تست متد دریافت ترم جاری
+
+GET {{host}}/api/DepartmentHead/current-semester
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI1MkQ3MUQ3MC03ODBELTQ2QjYtQTA1Ny00QzExMTE2QTczN0YiLCJ1bmlxdWVfbmFtZSI6ImFkbWluMjAyNiIsImdpdmVuX25hbWUiOiLZhdiv24zYsSDYs9uM2LPYqtmFIiwicm9sZSI6IkRlcGFydG1lbnRIZWFkIiwiRGVwYXJ0bWVudEhlYWRJZCI6IjUyRDcxRDcwLTc4MEQtNDZCNi1BMDU3LTRDMTExMTZBNzM3RiIsIm5iZiI6MTc4NDM3OTMyNSwiZXhwIjoxNzg0MzgwMjI1LCJpYXQiOjE3ODQzNzkzMjUsImlzcyI6IlVuaXZlcnNpdHlTeXN0ZW1BUEkiLCJhdWQiOiJVbml2ZXJzaXR5U3lzdGVtQW5ndWxhck9yUmVhY3QifQ.Douviq67NZtzmGj5wnUb4T9SefvW-OPEl33Uh3XH4X8
+Accept: application/json
+
+### ۵. دریافت کارتابل درخواست‌های ارجاع شده به مدیر گروه (دیدن وضعیت ApprovedByStaff)
+GET {{host}}/api/DepartmentHead/pending-workflow-requests?semesterId=1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI1MkQ3MUQ3MC03ODBELTQ2QjYtQTA1Ny00QzExMTE2QTczN0YiLCJ1bmlxdWVfbmFtZSI6ImFkbWluMjAyNiIsImdpdmVuX25hbWUiOiLZhdiv24zYsSDYs9uM2LPYqtmFIiwicm9sZSI6IkRlcGFydG1lbnRIZWFkIiwiRGVwYXJ0bWVudEhlYWRJZCI6IjUyRDcxRDcwLTc4MEQtNDZCNi1BMDU3LTRDMTExMTZBNzM3RiIsIm5iZiI6MTc4NDM5NTYwOSwiZXhwIjoxNzg0Mzk2NTA5LCJpYXQiOjE3ODQzOTU2MDksImlzcyI6IlVuaXZlcnNpdHlTeXN0ZW1BUEkiLCJhdWQiOiJVbml2ZXJzaXR5U3lzdGVtQW5ndWxhck9yUmVhY3QifQ.wWExTaEkBvVjG9BQpqxIyGuzIdCtt67h61QCYoaYtIE
+Accept: application/json
+
+### ۶. بررسی، تایید نهایی یا رد توسط مدیر گروه (تغییر وضعیت نهایی به ApprovedByManager)
+POST {{host}}/api/DepartmentHead/review-workflow-request
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI1MkQ3MUQ3MC03ODBELTQ2QjYtQTA1Ny00QzExMTE2QTczN0YiLCJ1bmlxdWVfbmFtZSI6ImFkbWluMjAyNiIsImdpdmVuX25hbWUiOiLZhdiv24zYsSDYs9uM2LPYqtmFIiwicm9sZSI6IkRlcGFydG1lbnRIZWFkIiwiRGVwYXJ0bWVudEhlYWRJZCI6IjUyRDcxRDcwLTc4MEQtNDZCNi1BMDU3LTRDMTExMTZBNzM3RiIsIm5iZiI6MTc4NDM5NTYwOSwiZXhwIjoxNzg0Mzk2NTA5LCJpYXQiOjE3ODQzOTU2MDksImlzcyI6IlVuaXZlcnNpdHlTeXN0ZW1BUEkiLCJhdWQiOiJVbml2ZXJzaXR5U3lzdGVtQW5ndWxhck9yUmVhY3QifQ.wWExTaEkBvVjG9BQpqxIyGuzIdCtt67h61QCYoaYtIE
+Content-Type: application/json
+
+{
+  "requestId": 1,
+  "isApproved": true,
+  "comment": "موافقت می‌شود. ظرفیت درس افزایش یافت."
+}
+
+### ۷. تعریف قالب جدید گردش کار توسط مدیر گروه (متد جدید)
+POST {{host}}/api/DepartmentHead/create-workflow-template
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI1MkQ3MUQ3MC03ODBELTQ2QjYtQTA1Ny00QzExMTE2QTczN0YiLCJ1bmlxdWVfbmFtZSI6ImFkbWluMjAyNiIsImdpdmVuX25hbWUiOiLZhdiv24zYsSDYs9uM2LPYqtmFIiwicm9sZSI6IkRlcGFydG1lbnRIZWFkIiwiRGVwYXJ0bWVudEhlYWRJZCI6IjUyRDcxRDcwLTc4MEQtNDZCNi1BMDU3LTRDMTExMTZBNzM3RiIsIm5iZiI6MTc4NDM5MjY4NSwiZXhwIjoxNzg0MzkzNTg1LCJpYXQiOjE3ODQzOTI2ODUsImlzcyI6IlVuaXZlcnNpdHlTeXN0ZW1BUEkiLCJhdWQiOiJVbml2ZXJzaXR5U3lzdGVtQW5ndWxhck9yUmVhY3QifQ.KgPkCCMfn9jIiTNTQb13SvecoCfazO6fLkzXYIv0Kyg
+Content-Type: application/json
+
+{
+  "Name": "درخواست معرفی به استاد",
+  "Description": "مخصوص دانشجویان ترم آخر جهت اخذ آخرین درس باقیمانده به صورت معرفی به استاد"
+}

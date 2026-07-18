@@ -9,5 +9,9 @@ namespace University_system.Interface_Service
         Task<SemesterTranscriptDto> GetSemesterTranscriptAsync(int studentId, int semesterId);
 
         Task<FullTranscriptDto> GetFullTranscriptAsync(int studentId);
+
+        Task<int> GetCurrentSemesterIdAsync();
+
+        Task<List<StudentReportResponseDto>> GetStudentsReportAsync(StudentReportFilterDto filter);
     }
 }

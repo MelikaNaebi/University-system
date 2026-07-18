@@ -12,11 +12,27 @@ namespace University_system.Repositories
             {
             }
 
-       
+        public async Task<List<Student>> GetFilteredStudentsAsync(string? studentNumber, string? name)
+        {
+            
+            var query = _dbSet.Include(s => s.User).Include(s => s.Enrollments).ThenInclude(e => e.Course).AsQueryable();
+
+
+            if (!string.IsNullOrEmpty(studentNumber))
+            {
+                query = query.Where(s => s.StudentNumber.Contains(studentNumber));
+            }
+            if (!string.IsNullOrEmpty(name))
+            {
+                query = query.Where(s => s.User.FirstName.Contains(name) || s.User.LastName.Contains(name));
+            }
+
+            return await query.ToListAsync();
+        }
 
         public async Task<int> GetStudentIdByUserIdAsync(string userId)
         {
-            var student = await _dbSet.FirstOrDefaultAsync(s => s.UserId == userId); // فرض بر این است که رابطه‌اش را داری
+            var student = await _dbSet.FirstOrDefaultAsync(s => s.UserId == userId); 
 
 
             return student?.Id ?? 0;

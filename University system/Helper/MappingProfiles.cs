@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using System.Globalization;
 using University_system.Dtos;
 using University_system.Models;
 
@@ -20,11 +21,8 @@ namespace University_system.Helper
                  .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                  .ForMember(dest => dest.Grade, opt => opt.MapFrom(src => src.Grade))
                  .ForMember(dest => dest.CourseId, opt => opt.MapFrom(src => src.CourseId))
-                 // خواندن نام درس از پرپرتی ارتباطی Course
                  .ForMember(dest => dest.CourseTitle, opt => opt.MapFrom(src => src.Course != null ? src.Course.Title : ""))
-                 // خواندن تعداد واحد از پرپرتی ارتباطی Course
                  .ForMember(dest => dest.CourseUnit, opt => opt.MapFrom(src => src.Course != null ? src.Course.Unit.ToString() : "0"))
-                // خواندن نام استاد در صورت وجود
                 .ForMember(dest => dest.InstructorName, opt => opt.MapFrom(src =>
                           src.Course != null && src.Course.Instructor != null && src.Course.Instructor.User != null
                           ? $"{src.Course.Instructor.User.FirstName} {src.Course.Instructor.User.LastName}"
@@ -39,10 +37,28 @@ namespace University_system.Helper
                  .ForMember(dest => dest.CurrentGrade, opt => opt.MapFrom(src => src.Grade)); 
           
             
-            CreateMap<WorkflowRequest, WorkflowRequestDto>();
-            CreateMap<Student, StudentProfileDto>();
-            CreateMap<Course, CourseDto>();
+                    CreateMap<WorkflowRequest, WorkflowRequestDto>();
+                    CreateMap<Student, StudentProfileDto>();
+                    CreateMap<Course, CourseDto>();
 
+            CreateMap<WorkflowRequest, WorkflowRequestDto>()
+.ForMember(dest => dest.StudentName, opt => opt.MapFrom(src =>
+    (src.Student != null && src.Student.User != null)
+    ? $"{src.Student.User.FirstName} {src.Student.User.LastName}"
+    : "نامشخص")).ForMember(dest => dest.CreatedAtPersian, opt => opt.MapFrom(src => ConvertToPersianDate(src.CreatedAt)));
+
+            CreateMap<CreateWorkflowRequestDto, WorkflowRequest>();
+            CreateMap<WorkflowTemplate, WorkflowTemplateDto>();
+
+
+        }
+
+        private static string ConvertToPersianDate(DateTime utcDateTime)
+        {
+            DateTime localTime = utcDateTime.ToLocalTime();
+            PersianCalendar pc = new PersianCalendar();
+
+            return $"{pc.GetYear(localTime)}/{pc.GetMonth(localTime):00}/{pc.GetDayOfMonth(localTime):00} {localTime.Hour:00}:{localTime.Minute:00}";
         }
 
     }

@@ -411,8 +411,14 @@ namespace University_system.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ManagerComment")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("SemesterId")
                         .HasColumnType("int");
+
+                    b.Property<string>("StaffComment")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -425,13 +431,45 @@ namespace University_system.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("WorkflowTemplateId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SemesterId");
 
                     b.HasIndex("StudentId");
 
+                    b.HasIndex("WorkflowTemplateId");
+
                     b.ToTable("WorkflowRequests");
+                });
+
+            modelBuilder.Entity("University_system.Models.WorkflowTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("RequiresStaffApproval")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WorkflowTemplates");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -585,9 +623,17 @@ namespace University_system.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("University_system.Models.WorkflowTemplate", "WorkflowTemplate")
+                        .WithMany()
+                        .HasForeignKey("WorkflowTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Semester");
 
                     b.Navigation("Student");
+
+                    b.Navigation("WorkflowTemplate");
                 });
 
             modelBuilder.Entity("University_system.Models.Course", b =>

@@ -72,16 +72,7 @@ namespace University_system.Services
             return true;
         }
 
-        public async Task<IEnumerable<EnrolledCourseDto>> GetAllEnrolledCoursesAsync(int studentId)
-        {
-
-
-            var enrollments = await _unitOfWork.Enrollments.GetAllStudentEnrollmentsAsync(studentId);
-
-            var courseDtos = _mapper.Map<IEnumerable<EnrolledCourseDto>>(enrollments);
-            return courseDtos;
-        }
-
+        
         public async Task<IEnumerable<StudentForGradeDto>> GetCourseStudentsbycourseAsync(int coursrId)
         {
             var enrollments = await _unitOfWork.Enrollments.GetStudentCoursesByCourseIdAsync(coursrId);
@@ -91,14 +82,7 @@ namespace University_system.Services
             return studentsDto;
         }
 
-        public async Task<IEnumerable<EnrolledCourseDto>> GetStudentCoursesBySemesterAsync(int studentId, int semesterId)
-        {
-
-            var enrollments = await _unitOfWork.Enrollments.GetStudentCoursesBySemesterAsync(studentId, semesterId);
-
-            var courseDtos = _mapper.Map<IEnumerable<EnrolledCourseDto>>(enrollments);
-            return courseDtos;
-        }
+ 
 
         public async Task<IEnumerable<EnrolledCourseDto>> GetStudentCoursesForActiveSemesterAsync(int studentId)
         {

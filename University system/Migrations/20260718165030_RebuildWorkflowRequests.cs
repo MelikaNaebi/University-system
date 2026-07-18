@@ -5,7 +5,7 @@
 namespace University_system.Migrations
 {
     /// <inheritdoc />
-    public partial class init6 : Migration
+    public partial class RebuildWorkflowRequests : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

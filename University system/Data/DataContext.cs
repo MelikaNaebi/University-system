@@ -10,6 +10,9 @@ namespace University_system.Data
 
 
         public DbSet<User> Users { get; set; }
+
+        public DbSet<WorkflowRequest>WorkflowRequests { get; set; }
+        public DbSet<WorkflowTemplate> WorkflowTemplates { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
 
@@ -17,13 +20,19 @@ namespace University_system.Data
         public DbSet<Student> Students { get; set; }
 
         public DbSet<Instructor> Instructors { get; set; }
-        public DbSet<WorkflowRequest> WorkflowRequests { get; set; }
 
         public DbSet<Department> Departments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+
+            modelBuilder.Entity<WorkflowRequest>()
+                .HasOne(w => w.WorkflowTemplate)
+              .WithMany() 
+              .HasForeignKey(w => w.WorkflowTemplateId)
+              .OnDelete(DeleteBehavior.Cascade); 
 
 
             modelBuilder.Entity<Course>()
@@ -54,7 +63,7 @@ namespace University_system.Data
                .HasOne(s => s.User)
                .WithOne()
                .HasForeignKey<Student>(s => s.UserId)
-               .OnDelete(DeleteBehavior.Cascade);    // اگر کاربر حذف شد، دانشجو هم حذف شود
+               .OnDelete(DeleteBehavior.Cascade);     
 
             modelBuilder.Entity<Student>()
                 .HasOne(s => s.Department)
@@ -95,7 +104,7 @@ namespace University_system.Data
                 .HasOne(d =>d.HeadInstructor)
                 .WithOne()
                 .HasForeignKey<Department>(d => d.HeadInstructorId)
-                .OnDelete(DeleteBehavior.SetNull); // اگر آن استاد پاک شد، فیلد مدیر گروه فقط Null شود
+                .OnDelete(DeleteBehavior.SetNull); 
 
         }
 

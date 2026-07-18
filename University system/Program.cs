@@ -20,6 +20,8 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<IWorkflowRequestRepository, WorkflowRequestRepository>();
+builder.Services.AddScoped<IWorkflowRequestService, WorkflowRequestService>();
 
 builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
 
