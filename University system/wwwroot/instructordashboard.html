@@ -2,9 +2,342 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>داشبورد اساتید</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد استاد | سامانه دانشگاهی</title>
+    <!-- Bootstrap 5 RTL CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <!-- FontAwesome برای آیکون‌ها -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            min-height: 100vh;
+            background-color: #212529;
+            color: #fff;
+        }
+
+            .sidebar .nav-link {
+                color: #dee2e6;
+                padding: 12px 20px;
+                border-radius: 5px;
+                margin: 5px 10px;
+            }
+
+                .sidebar .nav-link:hover, .sidebar .nav-link.active {
+                    background-color: #0d6efd;
+                    color: #fff;
+                }
+
+        .card-stat {
+            border: none;
+            border-radius: 10px;
+            transition: transform 0.2s;
+        }
+
+            .card-stat:hover {
+                transform: translateY(-5px);
+            }
+    </style>
 </head>
 <body>
-    <h1>ورود با موفقیت انجام شد! به پنل استاد خوش آمدید.</h1>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- ۱. منوی کناری (Sidebar) -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse p-0 shadow">
+                <div class="position-sticky pt-3">
+                    <div class="text-center py-3 mb-4 border-bottom border-secondary">
+                        <i class="fa-solid fa-user-tie fa-3x mb-2 text-primary"></i>
+                        <h5 class="m-0">پنل مدیریت استاد</h5>
+                        <small class="text-muted" id="instructorBadge">استاد گرامی</small>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">
+                                <i class="fa-solid fa-chalkboard-user me-2"></i> دروس من
+                            </a>
+                        </li>
+                        <li class="nav-item text-danger">
+                            <a class="nav-link text-danger mt-3" href="#" onclick="logout()">
+                                <i class="fa-solid fa-right-from-bracket me-2"></i> خروج از سیستم
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- ۲. محتوای اصلی داشبورد -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <!-- هدر بالای صفحه -->
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h3 text-secondary">خوش آمدید</h1>
+                    <span class="badge bg-secondary p-2">ترم جاری: نیمسال اول ۱۴۰۵</span>
+                </div>
+
+                <!-- ۳. کارت‌های آمار سریع (Top Cards) -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="card card-stat bg-white shadow-sm p-3 border-start border-primary border-4">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h6 class="text-muted mb-1">تعداد دروس فعال</h6>
+                                    <h3 class="fw-bold m-0 text-primary" id="coursesCountCard">-</h3>
+                                </div>
+                                <i class="fa-solid fa-book-open fa-2x text-opacity-25 text-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card card-stat bg-white shadow-sm p-3 border-start border-success border-4">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h6 class="text-muted mb-1">کل دانشجویان کلاس‌ها</h6>
+                                    <h3 class="fw-bold m-0 text-success" id="studentsCountCard">-</h3>
+                                </div>
+                                <i class="fa-solid fa-users fa-2x text-opacity-25 text-success"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card card-stat bg-white shadow-sm p-3 border-start border-warning border-4">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h6 class="text-muted mb-1">وضعیت نمرات</h6>
+                                    <h3 class="fw-bold m-0 text-warning">در حال بررسی</h3>
+                                </div>
+                                <i class="fa-solid fa-pen-to-square fa-2x text-opacity-25 text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ۴. جدول اصلی دروس استاد -->
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white py-3 border-bottom">
+                        <h5 class="card-title fw-bold m-0 text-secondary">
+                            <i class="fa-solid fa-list-check me-2 text-primary"></i> لیست دروس نیمسال جاری
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0 text-center">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>عنوان درس</th>
+                                        <th>تعداد واحد</th>
+                                        <th>ظرفیت کلاس</th>
+                                        <th>تعداد ثبت‌نامی</th>
+                                        <th>عملیات مدیریت</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="coursesTableBody">
+                                    <tr>
+                                        <td colspan="5" class="text-center p-4 text-muted">در حال بارگذاری لیست دروس...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- ۵. پنجره مودال ثبت نمرات (Pop-up Modal) -->
+    <div class="modal fade" id="gradesModal" tabindex="-1" aria-labelledby="gradesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="gradesModalLabel">
+                        <i class="fa-solid fa-graduation-cap me-2"></i> مدیریت لیست نمرات دانشجویان
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small">نمرات نهایی را وارد کرده و دکمه ثبت نمره هر دانشجو را بزنید.</p>
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle text-center">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>شماره دانشجویی</th>
+                                    <th>نام و نام خانوادگی</th>
+                                    <th style="width: 150px;">نمره نهایی</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentsTableBody">
+                                <tr>
+                                    <td colspan="4" class="text-center p-3 text-muted">لطفاً یک درس را انتخاب کنید.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن پنجره</button>
+                    <button type="button" class="btn border-primary text-primary">تایید نهایی کل نمرات کلاس</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JavaScript Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- ۶. منطق جاوااسکریپت و ارتباط با API بک‌آند -->
+    <script>
+        const BASE_URL = 'https://localhost:7246/api';
+
+        document.addEventListener("DOMContentLoaded", function () {
+            fetchCourses();
+        });
+
+        // -------- الف. دریافت لیست دروس از API --------
+        async function fetchCourses() {
+            const token = localStorage.getItem("token");
+            const tbody = document.getElementById("coursesTableBody");
+
+            try {
+                const response = await fetch(`${BASE_URL}/Instructor/courses`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) throw new Error("خطا در دریافت اطلاعات");
+
+                const data = await response.json();
+                tbody.innerHTML = "";
+
+                if (data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="text-center p-4 text-muted">هیچ درسی برای شما در این ترم ثبت نشده است.</td></tr>`;
+                    updateCards(0, 0);
+                    return;
+                }
+
+                data.forEach(course => {
+                    tbody.innerHTML += `
+                            <tr>
+                                <td class="fw-bold text-end ps-4">${course.title}</td>
+                                <td><span class="badge bg-light text-dark px-3 py-2">${course.unit} واحد</span></td>
+                                <td>${course.capacity}</td>
+                                <td><span class="text-primary fw-bold">${course.enrolledCount}</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="fetchStudents(${course.id})" data-bs-toggle="modal" data-bs-target="#gradesModal">
+                                        <i class="fa-solid fa-users-gear me-1"></i> مدیریت و نمره‌دهی
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                });
+
+                const totalStudents = data.reduce((sum, c) => sum + c.enrolledCount, 0);
+                updateCards(data.length, totalStudents);
+
+            } catch (error) {
+                console.error(error);
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-danger p-4">⚠️ خطا در ارتباط با سرور. مطمئن شوید بک‌آند فعال است.</td></tr>`;
+                updateCards("خطا", "خطا");
+            }
+        }
+
+        // -------- ب. دریافت لیست دانشجویان یک درس از API --------
+        // -------- ب. دریافت لیست دانشجویان یک درس از API --------
+        async function fetchStudents(courseId) {
+            const token = localStorage.getItem("token");
+            const tbody = document.getElementById("studentsTableBody");
+            tbody.innerHTML = `<tr><td colspan="4" class="text-center p-3 text-muted">در حال بارگذاری لیست دانشجویان...</td></tr>`;
+
+            try {
+                const response = await fetch(`${BASE_URL}/Instructor/courses/${courseId}/students`, {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) throw new Error();
+                const students = await response.json();
+                tbody.innerHTML = "";
+
+                if (students.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="4" class="text-center p-3 text-muted">دانشجویی در این درس ثبت‌نام نکرده است.</td></tr>`;
+                    return;
+                }
+
+                students.forEach(std => {
+                    // 👈 نکته طلایی: مچ کردن نام شناسه دریافتی از دات‌نت (اگر studentId بود یا id)
+                    const actualStudentId = std.studentId || std.id;
+
+                    tbody.innerHTML += `
+                            <tr>
+                                <td>${std.studentNumber}</td>
+                                <td class="text-end">${std.studentName}</td>
+                                <td>
+                                    <input type="number" id="grade-${actualStudentId}" class="form-control form-control-sm text-center" min="0" max="20" value="${std.currentGrade || ''}" placeholder="0-20">
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-success" onclick="saveGrade(${actualStudentId}, ${courseId})">
+                                        <i class="fa-solid fa-check"></i> ثبت
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                });
+
+            } catch (error) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-danger p-3">❌ خطا در دریافت لیست دانشجویان کلاس.</td></tr>`;
+            }
+        }
+        // -------- ج. ارسال نمره تکی دانشجویان به API (هماهنگ با submit-grade) --------
+        async function saveGrade(studentId, courseId) {
+            const token = localStorage.getItem("token");
+            const gradeInput = document.getElementById(`grade-${studentId}`);
+            const gradeValue = gradeInput.value;
+
+            if (gradeValue === "" || gradeValue < 0 || gradeValue > 20) {
+                alert("لطفاً نمره‌ای معتبر بین 0 تا 20 وارد کنید.");
+                return;
+            }
+            console.log("مقادیر ارسالی:", { studentId, courseId, gradeValue });
+            try {
+                const response = await fetch(`${BASE_URL}/Instructor/submit-grade`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        studentId: studentId,
+                        courseId: courseId,
+                        grade: parseFloat(gradeValue)
+                    })
+                });
+
+                if (response.ok) {
+                    alert("نمره با موفقیت در سیستم ثبت شد.");
+                } else {
+                    alert("ثبت نمره با خطا مواجه شد.");
+                }
+            } catch (error) {
+                alert("خطا در اتصال به سرور.");
+            }
+        }
+
+        function updateCards(coursesCount, studentsCount) {
+            document.getElementById("coursesCountCard").innerText = coursesCount === "خطا" ? "خطا" : `${coursesCount} درس`;
+            document.getElementById("studentsCountCard").innerText = studentsCount === "خطا" ? "خطا" : `${studentsCount} نفر`;
+        }
+
+        function logout() {
+            localStorage.removeItem("token");
+            window.location.href = "login.html";
+        }
+    </script>
 </body>
 </html>

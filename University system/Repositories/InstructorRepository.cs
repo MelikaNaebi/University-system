@@ -11,9 +11,9 @@ namespace University_system.Repositories
         
         public async Task<int> GetInstructorIdByUserIdAsync(string userId)
         {
-            var Instructor = await _dbSet.FirstOrDefaultAsync(I => I.UserId == userId);
-
-            return Instructor?.Id ?? 0;
+            var instructor = await _dbSet.FirstOrDefaultAsync(i =>
+                    i.UserId.Trim().ToLower() == userId.Trim().ToLower());
+            return instructor?.Id ?? 0;
         }
     }
 }

@@ -9,7 +9,7 @@ POST {{host}}/api/auth/login
 Content-Type: application/json
 
 {
-  "username": "inst_01",
+  "username": "prof2026",
   "password": "Password123!"
 }
 
@@ -19,5 +19,22 @@ Content-Type: application/json
 
 #### ۲. تست متد دریافت لیست درس‌های ترم جاری استاد
 GET {{host}}/api/Instructor/semester-courses
-Authorization: Bearer
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJBQjhEOTU1Qy04NDFDLTQzOEItODA2Mi1FRUVDNUU0M0VGRTciLCJ1bmlxdWVfbmFtZSI6InByb2YyMDI2IiwiZ2l2ZW5fbmFtZSI6Itin2LPYqtin2K8g2YbZhdmI2YbZhyIsInJvbGUiOlsiSW5zdHJ1Y3RvciIsIkluc3RydWN0b3IiXSwibmJmIjoxNzg0MzE1MTU0LCJleHAiOjE3ODQzMTYwNTQsImlhdCI6MTc4NDMxNTE1NCwiaXNzIjoiVW5pdmVyc2l0eVN5c3RlbUFQSSIsImF1ZCI6IlVuaXZlcnNpdHlTeXN0ZW1Bbmd1bGFyT3JSZWFjdCJ9.H4pHUO3r47w7kOZqdctiUpq_pHIG7DMqAYs3bYEah1c
 Accept: application/json
+
+
+### ۱. تست گرفتن لیست دانشجویان یک درس (اندپوینتی که الان ساختیم)
+GET {{host}}/api/Instructor/courses/10/students
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJBQjhEOTU1Qy04NDFDLTQzOEItODA2Mi1FRUVDNUU0M0VGRTciLCJ1bmlxdWVfbmFtZSI6InByb2YyMDI2IiwiZ2l2ZW5fbmFtZSI6Itin2LPYqtin2K8g2YbZhdmI2YbZhyIsInJvbGUiOlsiSW5zdHJ1Y3RvciIsIkluc3RydWN0b3IiXSwibmJmIjoxNzg0MzIwMTA0LCJleHAiOjE3ODQzMjEwMDQsImlhdCI6MTc4NDMyMDEwNCwiaXNzIjoiVW5pdmVyc2l0eVN5c3RlbUFQSSIsImF1ZCI6IlVuaXZlcnNpdHlTeXN0ZW1Bbmd1bGFyT3JSZWFjdCJ9.RrgFWheu0jQBlq-vyXqtjBiqU4tUzbZuP6aRxji4F_8
+Accept: application/json
+
+### ۴. تست ثبت نمره جدید (تطبیق داده شده با مدل فرانت‌آند و اندپوینت submit-grade)
+POST {{host}}/api/Instructor/submit-grade
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJBQjhEOTU1Qy04NDFDLTQzOEItODA2Mi1FRUVDNUU0M0VGRTciLCJ1bmlxdWVfbmFtZSI6InByb2YyMDI2IiwiZ2l2ZW5fbmFtZSI6Itin2LPYqtin2K8g2YbZhdmI2YbZhyIsInJvbGUiOlsiSW5zdHJ1Y3RvciIsIkluc3RydWN0b3IiXSwibmJmIjoxNzg0MzI2NzM4LCJleHAiOjE3ODQzMjc2MzgsImlhdCI6MTc4NDMyNjczOCwiaXNzIjoiVW5pdmVyc2l0eVN5c3RlbUFQSSIsImF1ZCI6IlVuaXZlcnNpdHlTeXN0ZW1Bbmd1bGFyT3JSZWFjdCJ9.x9EKAsyZdQhMOxXTMNiH3RO1NVt786JcdAnCZJn3PqU
+Content-Type: application/json
+
+{
+    "studentId": 6,
+    "courseId": 10,
+    "grade": 18.5
+}

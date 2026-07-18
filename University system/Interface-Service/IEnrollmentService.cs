@@ -16,7 +16,8 @@ namespace University_system.Interface_Service
         Task<IEnumerable<EnrolledCourseDto>> GetAllEnrolledCoursesAsync(int studentId);
         Task<IEnumerable<EnrolledCourseDto>> GetStudentCoursesForActiveSemesterAsync(int studentId);
 
-        Task<bool> SubmitGradeByInstructorAsync(int enrollmentId, double grade);
-        Task<bool> UpdateGradeAsync(int enrollmentId, double newGrade);
+        Task<IEnumerable<StudentForGradeDto>> GetCourseStudentsbycourseAsync(int coursrId);
+
+        Task<bool> SubmitOrUpdateGradeByInstructorAsync(int studentId,int courseId, double grade);
     }
 }

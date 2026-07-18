@@ -84,11 +84,10 @@ namespace University_system.Services
             else if (roles.Contains("Instructor"))
             {
                 // از طریق واحد کار یا ریپازیتوری، استاد را با UserId پیدا می‌کنی
-                var instructorId = await _unitOfWork.Instructors.GetInstructorIdByUserIdAsync(user.Id);
-                if (instructorId != 0)
-                {
-                    claims.Add(new Claim("InstructorId", instructorId.ToString()));
-                }
+                // var instructorId = await _unitOfWork.Instructors.GetInstructorIdByUserIdAsync(user.Id);
+
+
+                claims.Add(new Claim(ClaimTypes.Role, "Instructor"));
             }
             else if (roles.Contains("Admin") || roles.Contains("Administrator"))
             {

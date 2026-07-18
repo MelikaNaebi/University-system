@@ -1,29 +1,30 @@
 ﻿<div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="fw-bold text-white">گزارش کارنامه تحصیلی</h4>
+    <h4 class="fw-bold text-dark">گزارش کارنامه تحصیلی</h4>
 </div>
 
-<!-- کارت‌های خلاصه وضعیت کل دوره -->
+<!-- کارت‌های خلاصه وضعیت کل دوره (اصلاح شده به تم روشن با متن‌های کاملاً واضح) -->
 <div class="row g-3 mb-4">
     <div class="col-md-4">
-        <div class="card bg-dark text-white border-secondary">
-            <div class="card-body text-center">
-                <h6 class="text-white-50">معدل کل (CGPA)</h6>
+        <div class="card bg-white text-dark shadow-sm border-0">
+            <div class="card-body text-center py-4">
+                <h6 class="text-muted mb-2">معدل کل (CGPA)</h6>
                 <h3 class="fw-bold text-success" id="lblOverallGPA">---</h3>
             </div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card bg-dark text-white border-secondary">
-            <div class="card-body text-center">
-                <h6 class="text-white-50">کل واحدهای گذرانده شده</h6>
-                <h3 class="fw-bold text-info" id="lblOverallPassedUnits">0 واحد</h3>
+        <div class="card bg-white text-dark shadow-sm border-0">
+            <div class="card-body text-center py-4">
+                <h6 class="text-muted mb-2">کل واحدهای گذرانده شده</h6>
+                <!-- آیدی دقیق lblOverallPassedUnits برای نمایش صحیح واحدها -->
+                <h3 class="fw-bold text-primary" id="lblOverallPassedUnits">0 واحد</h3>
             </div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card bg-dark text-white border-secondary">
-            <div class="card-body text-center">
-                <h6 class="text-white-50">وضعیت کلی تحصیلی</h6>
+        <div class="card bg-white text-dark shadow-sm border-0">
+            <div class="card-body text-center py-4">
+                <h6 class="text-muted mb-2">وضعیت کلی تحصیلی</h6>
                 <h3 class="fw-bold text-warning" id="lblOverallStatus">---</h3>
             </div>
         </div>
@@ -31,15 +32,15 @@
 </div>
 
 <!-- ناوبری تب‌ها (Tabs Navigation) -->
-<ul class="nav nav-tabs border-secondary mb-3" id="transcriptTabs" role="tablist">
+<ul class="nav nav-tabs border-light-subtle mb-3" id="transcriptTabs" role="tablist">
     <li class="nav-item" role="presentation">
-        <button class="nav-link active text-white bg-transparent border-0 border-bottom border-primary fw-bold" id="overall-tab" data-bs-toggle="tab" data-bs-target="#overallTranscript" type="button" role="tab" aria-controls="overallTranscript" aria-selected="true">
-            <i class="bi bi-collection-play me-1"></i> خلاصه وضعیت ترم‌ها (کارنامه کل)
+        <button class="nav-link active text-secondary bg-transparent border-0 border-bottom border-2 fw-bold" id="overall-tab" data-bs-toggle="tab" data-bs-target="#overallTranscript" type="button" role="tab" aria-controls="overallTranscript" aria-selected="true">
+            <i class="fa-solid fa-layer-group me-1"></i> خلاصه وضعیت ترم‌ها (کارنامه کل)
         </button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link text-white bg-transparent border-0 border-bottom border-primary fw-bold" id="semester-tab" data-bs-toggle="tab" data-bs-target="#semesterTranscriptPane" type="button" role="tab" aria-controls="semesterTranscriptPane" aria-selected="false">
-            <i class="bi bi-calendar3 me-1"></i> ریز نمرات ترمی (کارنامه ترمی)
+        <button class="nav-link text-secondary bg-transparent border-0 border-bottom border-2 fw-bold" id="semester-tab" data-bs-toggle="tab" data-bs-target="#semesterTranscriptPane" type="button" role="tab" aria-controls="semesterTranscriptPane" aria-selected="false">
+            <i class="fa-solid fa-calendar-days me-1"></i> ریز نمرات ترمی (کارنامه ترمی)
         </button>
     </li>
 </ul>
@@ -49,11 +50,11 @@
 
     <!-- ۱. تب کارنامه کل -->
     <div class="tab-pane fade show active" id="overallTranscript" role="tabpanel" aria-labelledby="overall-tab">
-        <div class="card bg-dark text-white border-secondary">
+        <div class="card bg-white text-dark shadow-sm border-0">
             <div class="card-body p-0">
-                <table class="table table-dark table-hover mb-0 text-center align-middle">
+                <table class="table table-hover mb-0 text-center align-middle">
                     <thead>
-                        <tr class="text-secondary" style="border-bottom: 2px solid #334155; background-color: #0f172a;">
+                        <tr class="table-light text-secondary" style="border-bottom: 2px solid #dee2e6;">
                             <th style="width: 10%">ردیف</th>
                             <th style="width: 25%">نام نیمسال</th>
                             <th style="width: 20%">تعداد واحد اخذ شده</th>
@@ -61,9 +62,9 @@
                             <th style="width: 20%">وضعیت</th>
                         </tr>
                     </thead>
-                    <tbody id="overallTranscriptTableBody">
+                    <tbody id="overallTranscriptTableBody" class="text-dark">
                         <tr>
-                            <td colspan="5" class="py-4 text-info">
+                            <td colspan="5" class="py-4 text-primary">
                                 <span class="spinner-border spinner-border-sm me-2"></span>در حال بارگذاری کارنامه کل...
                             </td>
                         </tr>
@@ -73,34 +74,34 @@
         </div>
     </div>
 
-    <!-- ۲. تب کارنامه ترمی (جدید و متناسب با خروجی بک‌آند) -->
+    <!-- ۲. تب کارنامه ترمی همراه با سلکت باکس اصلاح شده -->
     <div class="tab-pane fade" id="semesterTranscriptPane" role="tabpanel" aria-labelledby="semester-tab">
-        <div class="card bg-dark text-white border-secondary mb-3">
+        <div class="card bg-white text-dark shadow-sm border-0 mb-3">
             <div class="card-body">
-                <div class="row align-middle g-3">
+                <div class="row align-items-center g-3">
                     <div class="col-md-4">
-                        <label for="ddlSemesters" class="form-label text-white-50 small">انتخاب نیمسال تحصیلی:</label>
-                        <select id="ddlSemesters" class="form-select bg-dark text-white border-secondary">
-                            <option value="">در حال دریافت ترم‌ها...</option>
+                        <label for="ddlSemesters" class="form-label text-muted small fw-bold">انتخاب نیمسال تحصیلی:</label>
+                        <!-- اصلاح استایل برای خوانایی کامل متن گزینه‌های داخل سلکت باکس -->
+                        <select id="ddlSemesters" class="form-select bg-white text-dark border-secondary-subtle">
+                            <option value="" class="text-dark">در حال دریافت ترم‌ها...</option>
                         </select>
                     </div>
                     <div class="col-md-8 d-flex align-items-end justify-content-md-end">
-                        <!-- هدر وضعیت خلاصه‌ای ترم انتخابی مبتنی بر فیلدهای خروجی جی‌سان شما -->
                         <div id="semesterSummaryBadges" class="d-none">
-                            <span class="badge bg-secondary p-2 me-2">تعداد واحد ترم: <strong id="lblSemCredits">0</strong></span>
-                            <span class="badge bg-primary p-2 me-2">معدل ترم: <strong id="lblSemGPA">0</strong></span>
-                            <span class="badge bg-success p-2" id="lblSemStatusBadge">وضعیت: <strong id="lblSemStatus">---</strong></span>
+                            <span class="badge bg-secondary p-2 me-2 fs-6">تعداد واحد ترم: <strong id="lblSemCredits">0</strong></span>
+                            <span class="badge bg-primary p-2 me-2 fs-6">معدل ترم: <strong id="lblSemGPA">0</strong></span>
+                            <span class="badge bg-success p-2 fs-6" id="lblSemStatusBadge">وضعیت: <strong id="lblSemStatus">---</strong></span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="card bg-dark text-white border-secondary">
+        <div class="card bg-white text-dark shadow-sm border-0">
             <div class="card-body p-0">
-                <table class="table table-dark table-hover mb-0 text-center align-middle">
+                <table class="table table-hover mb-0 text-center align-middle">
                     <thead>
-                        <tr class="text-secondary" style="border-bottom: 2px solid #334155; background-color: #0f172a;">
+                        <tr class="table-light text-secondary" style="border-bottom: 2px solid #dee2e6;">
                             <th style="width: 15%">کد درس</th>
                             <th style="width: 40%">نام درس</th>
                             <th style="width: 15%">تعداد واحد</th>
@@ -108,7 +109,7 @@
                             <th style="width: 15%">وضعیت</th>
                         </tr>
                     </thead>
-                    <tbody id="semesterTranscriptTableBody">
+                    <tbody id="semesterTranscriptTableBody" class="text-dark">
                         <tr>
                             <td colspan="5" class="py-4 text-muted">لطفاً یک ترم را انتخاب کنید.</td>
                         </tr>
@@ -120,21 +121,101 @@
 
 </div>
 
-<!-- استایل اختصاصی برای تب‌های فعال هماهنگ با تم تاریک پروژه -->
+<!-- استایل اختصاصی جهت هماهنگی کامل تب‌ها با تم روشن جدید -->
 <style>
     .nav-tabs .nav-link {
         border-radius: 0 !important;
+        color: #6c757d !important;
+        border-bottom: 2px solid transparent !important;
         transition: all 0.2s ease-in-out;
     }
 
         .nav-tabs .nav-link:hover {
-            border-bottom: 2px solid #3b82f6 !important;
-            color: #3b82f6 !important;
+            border-bottom: 2px solid #0d6efd !important;
+            color: #0d6efd !important;
         }
 
         .nav-tabs .nav-link.active {
-            border-bottom: 2px solid #3b82f6 !important;
-            color: #3b82f6 !important;
+            border-bottom: 2px solid #0d6efd !important;
+            color: #0d6efd !important;
             font-weight: bold;
         }
+
+    /* رفع مشکل خوانایی متون آپشن‌ها در سلکت‌باکس برخی مرورگرها */
+    #ddlSemesters option {
+        background-color: #ffffff !important;
+        color: #212529 !important;
+    }
 </style>
+
+<script>// بستن در محدوده محلی کپسوله شده برای بازنویسی امن تابع بدون تداخل لود
+    (function() {
+        const token = localStorage.getItem("token");
+        const baseApiUrl = "https://localhost:7246/api/Student";
+
+        if (typeof window.loadFullTranscript === "function") {
+
+            // اصلاح منطق رنگ‌آمیزی وضعیت نمرات برای تصحیح وضعیت «ثبت نشده»
+            window.loadSemesterTranscript = function (semesterId) {
+                const tbody = document.getElementById("semesterTranscriptTableBody");
+                if (!tbody) return;
+
+                fetch(`${baseApiUrl}/transcript/semester?semesterId=${semesterId}`, {
+                    method: "GET",
+                    headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    tbody.innerHTML = "";
+                    const courses = data.courses || data.Courses;
+                    if (!courses || courses.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="5" class="py-3 text-muted">اطلاعاتی یافت نشد.</td></tr>`;
+                        return;
+                    }
+
+                    courses.forEach(course => {
+                        let rawGrade = course.grade !== undefined ? course.grade : course.Grade;
+                        let displayGrade = "ثبت نشده";
+                        let statusBadge = "";
+
+                        // اعتبارسنجی دقیق نمره جهت جلوگیری از قرمز شدن موارد خالی
+                        if (rawGrade !== null && rawGrade !== undefined && rawGrade !== "") {
+                            let numericGrade = parseFloat(rawGrade);
+                            if (!isNaN(numericGrade)) {
+                                displayGrade = numericGrade.toFixed(2);
+                                if (numericGrade >= 10) {
+                                    statusBadge = `<span class="badge bg-success px-3 py-2">قبول</span>`;
+                                } else {
+                                    statusBadge = `<span class="badge bg-danger px-3 py-2">مردود</span>`;
+                                }
+                            } else {
+                                displayGrade = rawGrade;
+                                statusBadge = `<span class="badge bg-warning text-dark px-3 py-2">جاری</span>`;
+                            }
+                        } else {
+                            // نمراتی که ثبت نشده‌اند زرد (جاری) باقی بمانند نه قرمز
+                            statusBadge = `<span class="badge bg-warning text-dark px-3 py-2">جاری</span>`;
+                        }
+
+                        const credits = course.credits !== undefined ? course.credits : (course.courseUnit || course.CourseUnit || 0);
+
+                        const row = `
+                            <tr>
+                                <td><code class="text-secondary">CRS-${course.courseId || course.id || ''}</code></td>
+                                <td class="text-start ps-4 fw-bold text-dark">${course.courseTitle || course.title || 'نامشخص'}</td>
+                                <td>${credits} واحد</td>
+                                <td><strong>${displayGrade}</strong></td>
+                                <td>${statusBadge}</td>
+                            </tr>`;
+                        tbody.insertAdjacentHTML("beforeend", row);
+                    });
+                })
+                .catch(err => {
+                    tbody.innerHTML = `<tr><td colspan="5" class="py-3 text-danger">خطا در دریافت ریز نمرات</td></tr>`;
+                });
+            };
+
+            // فراخوانی مجدد تابع پس از تغییر ساختار جهت اعمال آنی دیتای بک‌اند
+            window.loadFullTranscript();
+        }
+    })();</script>

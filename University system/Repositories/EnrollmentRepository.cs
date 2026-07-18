@@ -38,15 +38,20 @@ namespace University_system.Repositories
 
         public async Task<IEnumerable<Enrollment>> GetStudentCoursesForActiveSemesterAsync(int studentId)
         {
-            // var activeSemester = await _dbSet.GetCurrentSemesterAsync();
 
             var activeSemester = await _context.Semesters
-        .Where(s => s.IsCurrent)
-        .Select(s => s.Id)
-        .FirstOrDefaultAsync();
+             .Where(s => s.IsCurrent)
+             .Select(s => s.Id)
+                .FirstOrDefaultAsync();
 
 
             return await _dbSet.Include(e => e.Course).ThenInclude(c => c.Instructor).Where(e => e.StudentId == studentId && e.Course.SemesterId == activeSemester).ToListAsync(); ;
+        }
+
+        public async Task<IEnumerable<Enrollment>> GetStudentCoursesByCourseIdAsync(int coursrId)
+        {
+            return await _dbSet.Where(e=>e.CourseId == coursrId).Include(e =>e.Student ).ThenInclude(s =>s.User).ToListAsync();
+
         }
     }
 }

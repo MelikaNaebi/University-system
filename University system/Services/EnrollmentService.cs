@@ -82,6 +82,15 @@ namespace University_system.Services
             return courseDtos;
         }
 
+        public async Task<IEnumerable<StudentForGradeDto>> GetCourseStudentsbycourseAsync(int coursrId)
+        {
+            var enrollments = await _unitOfWork.Enrollments.GetStudentCoursesByCourseIdAsync(coursrId);
+
+            var studentsDto = _mapper.Map<IEnumerable<StudentForGradeDto>>(enrollments);
+
+            return studentsDto;
+        }
+
         public async Task<IEnumerable<EnrolledCourseDto>> GetStudentCoursesBySemesterAsync(int studentId, int semesterId)
         {
 
@@ -105,30 +114,20 @@ namespace University_system.Services
             return enrollmentsDto;
         }
 
-        public async Task<bool> SubmitGradeByInstructorAsync(int enrollmentId, double grade)
+        public async Task<bool> SubmitOrUpdateGradeByInstructorAsync(int studentId, int courseId, double grade)
         {
-            var Enrolledcourse = await _unitOfWork.Enrollments.GetByIdAsync(enrollmentId);
-            if (Enrolledcourse == null)
+            var enrolledcourse = await _unitOfWork.Enrollments.GetEnrollmentAsync(studentId,courseId);
+
+            if (enrolledcourse == null)
             {
                 return false;
             }
 
-            Enrolledcourse.Grade = grade;
+            enrolledcourse.Grade = grade;
             var result = await _unitOfWork.CompleteAsync();
             return result > 0;
         }
 
-        public async Task<bool> UpdateGradeAsync(int enrollmentId, double newGrade)
-        {
-            var enrollment = await _unitOfWork.Enrollments.GetByIdAsync(enrollmentId);
-            if (enrollment == null)
-            {
-                return false;
-            }
-
-            enrollment.Grade = newGrade;
-            var result = await _unitOfWork.CompleteAsync();
-            return result > 0;
-        }
+       
     }
 }
