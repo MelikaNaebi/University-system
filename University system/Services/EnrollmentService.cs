@@ -82,18 +82,41 @@ namespace University_system.Services
             return studentsDto;
         }
 
- 
+
 
         public async Task<IEnumerable<EnrolledCourseDto>> GetStudentCoursesForActiveSemesterAsync(int studentId)
         {
-            // ریپازیتوری شما خودش userId را می‌گیرد و لیست دروس را آماده برمی‌گرداند
             var enrollments = await _unitOfWork.Enrollments.GetStudentCoursesForActiveSemesterAsync(studentId);
 
             if (enrollments == null)
             {
                 throw new Exception("دروسی برای این دانشجو در ترم فعال یافت نشد.");
             }
+
             var enrollmentsDto = _mapper.Map<IEnumerable<EnrolledCourseDto>>(enrollments);
+
+            foreach (var dto in enrollmentsDto)
+            {
+                var original = enrollments.FirstOrDefault(e => e.Id == dto.Id);
+
+                if (original?.Course?.Instructor != null)
+                {
+                    var user = original.Course.Instructor.User;
+
+                    if (user != null && (!string.IsNullOrEmpty(user.FirstName) || !string.IsNullOrEmpty(user.LastName)))
+                    {
+                        dto.InstructorName = $"{user.FirstName} {user.LastName}";
+                    }
+                    else
+                    {
+                        dto.InstructorName = "استاد بدون نام";
+                    }
+                }
+                else
+                {
+                    dto.InstructorName = "بدون استاد";
+                }
+            }
 
             return enrollmentsDto;
         }

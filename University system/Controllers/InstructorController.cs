@@ -35,7 +35,6 @@ namespace University_system.Controllers
 
             try
             {
-                // ۲. پیدا کردن مستقیم استاد با کانتکست (همان کدی که تست کردی و جواب داد)
                 var instructor = await _context.Instructors.FirstOrDefaultAsync(i => i.UserId == userId);
 
                 if (instructor == null)
@@ -43,7 +42,6 @@ namespace University_system.Controllers
                     return StatusCode(StatusCodes.Status403Forbidden, "حساب کاربری استاد یافت نشد.");
                 }
 
-                // ۳. گرفتن درس‌ها با آی‌دی واقعی استاد (عدد ۸) و فرستادن به سرویس
                 var courses = await _courseService.GetInstructorCoursesAsync(instructor.Id);
 
                 return Ok(courses);

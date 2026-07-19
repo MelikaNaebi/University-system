@@ -40,7 +40,7 @@ namespace University_system.Repositories
 
         public async Task<Student> GetStudentWithUserAsync(int studentId)
         {
-            return await _dbSet.Where(s => s.Id == studentId).FirstOrDefaultAsync();
+            return await _dbSet.Include(s => s.User).Include(s => s.Department).Where(s => s.Id == studentId).FirstOrDefaultAsync();
         }
     }
     }

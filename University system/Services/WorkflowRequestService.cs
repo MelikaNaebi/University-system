@@ -17,12 +17,14 @@ namespace University_system.Services
             _mapper = mapper;
         }
 
-        public async Task<bool> CreateRequestAsync(int studentId, int semesterId, int templateId, string title, string description)
+        public async Task<bool> CreateRequestAsync(int studentId,  int templateId, string title, string description)
         {
             var template = await _unitOfWork.WorkflowTemplates.GetByIdAsync(templateId);
             if (template == null) return false;
 
-            string initialStatus = template.RequiresStaffApproval ? "Submitted" : "ApprovedByStaff";
+            string initialStatus = template.RequiresStaffApproval ? "Pending" : "ApprovedByStaff";
+            var activeSemesterId = await _unitOfWork.Semesters.GetCurrentSemesterAsync();
+
 
             var request = new WorkflowRequest
             {
@@ -30,7 +32,7 @@ namespace University_system.Services
                 WorkflowTemplateId = templateId,
                 Title = title,
                 Description = description,
-                SemesterId = semesterId,
+                SemesterId = activeSemesterId,
                 Status = initialStatus,
                 CreatedAt = DateTime.UtcNow
             };
@@ -39,13 +41,25 @@ namespace University_system.Services
             var result = await _unitOfWork.CompleteAsync();
             return result > 0;
         }
-
-        public async Task<IEnumerable<WorkflowRequestDto>> GetStudentRequestsAsync(int studentId, int semesterId)
+        public async Task<IEnumerable<WorkflowRequestDto>> GetStudentRequestsAsync(int studentId)
         {
-            var studentRequests = await _unitOfWork.WorkflowRequests.GetWorkFlowRequestsByStudentIdAsync(studentId, semesterId);
+            var activeSemesterId = await _unitOfWork.Semesters.GetCurrentSemesterAsync();
+
+            var studentRequests = await _unitOfWork.WorkflowRequests.GetWorkFlowRequestsByStudentIdAsync(studentId, activeSemesterId);
             if (studentRequests == null) { return null; }
 
-            return _mapper.Map<IEnumerable<WorkflowRequestDto>>(studentRequests);
+            var dtos = _mapper.Map<IEnumerable<WorkflowRequestDto>>(studentRequests);
+
+            foreach (var dto in dtos)
+            {
+                var originalRequest = studentRequests.FirstOrDefault(r => r.Id == dto.Id);
+                if (originalRequest?.WorkflowTemplate != null)
+                {
+                    dto.TemplateName = originalRequest.WorkflowTemplate.Name;
+                }
+            }
+
+            return dtos;
         }
 
         public async Task<bool> ReviewByStaffAsync(ReviewWorkflowRequestDto dto)
@@ -73,16 +87,50 @@ namespace University_system.Services
             return result > 0;
         }
 
-        public async Task<IEnumerable<WorkflowRequestDto>> GetStaffCartableAsync(int semesterId)
+        public async Task<IEnumerable<WorkflowRequestDto>> GetStaffCartableAsync()
         {
-            var requests = await _unitOfWork.WorkflowRequests.GetPendingRequestsForStaffAsync(semesterId);
-            return _mapper.Map<IEnumerable<WorkflowRequestDto>>(requests);
+            var activeSemesterId = await _unitOfWork.Semesters.GetCurrentSemesterAsync();
+
+            var requests = await _unitOfWork.WorkflowRequests.GetPendingRequestsForStaffAsync(activeSemesterId);
+
+            var dtos = _mapper.Map<IEnumerable<WorkflowRequestDto>>(requests).ToList();
+
+            for (int i = 0; i < requests.Count(); i++)
+            {
+                var req = requests.ElementAt(i);
+                var dto = dtos.ElementAt(i);
+
+                dto.TemplateName = req.WorkflowTemplate != null ? req.WorkflowTemplate.Name : "قالب نامشخص";
+
+                if (req.Student?.User != null)
+                {
+                    dto.StudentName = $"{req.Student.User.FirstName} {req.Student.User.LastName}";
+                }
+            }
+
+            return dtos;
         }
 
         public async Task<IEnumerable<WorkflowRequestDto>> GetManagerCartableAsync(int semesterId)
         {
             var requests = await _unitOfWork.WorkflowRequests.GetPendingRequestsForManagerAsync(semesterId);
-            return _mapper.Map<IEnumerable<WorkflowRequestDto>>(requests);
+
+            var dtos = _mapper.Map<IEnumerable<WorkflowRequestDto>>(requests).ToList();
+
+            for (int i = 0; i < requests.Count(); i++)
+            {
+                var req = requests.ElementAt(i);
+                var dto = dtos.ElementAt(i);
+
+                dto.TemplateName = req.WorkflowTemplate != null ? req.WorkflowTemplate.Name : "قالب نامشخص";
+
+                if (req.Student?.User != null)
+                {
+                    dto.StudentName = $"{req.Student.User.FirstName} {req.Student.User.LastName}";
+                }
+            }
+
+            return dtos;
         }
 
         public async Task<bool> CreateTemplateAsync(CreateTemplateDto dto)

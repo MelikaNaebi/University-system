@@ -1,657 +1,743 @@
-﻿     <!DOCTYPE html>
-    <html lang="fa" dir="rtl">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>داشبورد دانشجویی</title>
+﻿<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد دانشجویی</title>
 
-        <link class="js-search" rel="stylesheet" href="css/bootstrap.rtl.min.css">
-        <link rel="stylesheet" href="css/bootstrap-icons.min.css">
+    <link class="js-search" rel="stylesheet" href="css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="css/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        <style>
-            body {
-                background-color: #1e293b;
-                font-family: Tahoma, Geneva, Verdana, sans-serif;
-                margin: 0;
-                padding: 0;
-                overflow-x: hidden;
-            }
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
 
-            .sidebar {
-                background-color: #0f172a;
-                min-height: 100vh;
-                border-left: 1px solid #334155;
-                padding: 0;
-            }
+        .sidebar {
+            min-height: 100vh;
+            background-color: #212529;
+            color: #fff;
+            padding: 0;
+        }
 
-            .student-profile {
-                border-bottom: 1px solid #334155;
-                padding: 25px 15px;
-            }
+        .student-profile {
+            border-bottom: 1px solid #495057;
+            padding: 25px 15px;
+        }
 
-            .avatar-img {
-                width: 80px;
-                height: 80px;
-                object-fit: cover;
-                border: 2px solid #3b82f6;
-            }
+        .avatar-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border: 2px solid #0d6efd;
+        }
 
-            .sidebar .nav {
-                padding-right: 0;
-                list-style: none;
-            }
+        .sidebar .nav {
+            padding-right: 0;
+            list-style: none;
+        }
 
-            .sidebar .nav-link {
-                color: #cbd5e1;
-                padding: 12px 20px;
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                text-decoration: none;
-                transition: all 0.2s;
-            }
+        .sidebar .nav-link {
+            color: #dee2e6;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 5px 10px;
+            transition: all 0.2s;
+        }
 
-                .sidebar .nav-link:hover, .sidebar .nav-link.active {
-                    background-color: #1e293b;
-                    color: #3b82f6;
-                    font-weight: bold;
-                }
-
-            .main-content {
-                padding: 30px;
+            .sidebar .nav-link:hover, .sidebar .nav-link.active {
+                background-color: #0d6efd;
                 color: #fff;
+                font-weight: bold;
             }
-        </style>
-    </head>
-    <body>
 
-        <div class="container-fluid m-0 p-0">
-            <div class="row g-0">
+        .main-content {
+            padding: 30px;
+            color: #212529;
+        }
+    </style>
+</head>
+<body>
 
-                <nav class="col-md-3 col-lg-2 d-none d-md-flex flex-column justify-content-between sidebar p-0 shadow">
-                    <div>
-                        <div class="student-profile text-center pt-4">
-                            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=student" class="rounded-circle avatar-img mb-3" alt="دانشجو">
-                            <h6 class="fw-bold mb-1 text-white" id="lblStudentName">---</h6>
-                            <div class="text-white-50 small mb-2" id="lblStudentMajor">رشته: مهندسی کامپیوتر</div>
-                            <span class="badge bg-primary px-2 py-1 small" id="lblStudentId">---</span>
-                        </div>
+    <div class="container-fluid m-0 p-0">
+        <div class="row g-0">
 
-                        <ul class="nav flex-column mt-3" id="sidebarMenu">
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-page="register">
-                                    <i class="bi bi-calendar-plus"></i> <span>انتخاب واحد</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link active" href="#" data-page="courses">
-                                    <i class="bi bi-book"></i> <span>درس‌های من</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-page="reports">
-                                    <i class="bi bi-file-earmark-bar-graph"></i> <span>گزارشات</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-page="requests">
-                                    <i class="bi bi-envelope-paper"></i> <span>درخواست‌ها</span>
-                                </a>
-                            </li>
-                        </ul>
+            <nav class="col-md-3 col-lg-2 d-none d-md-flex flex-column justify-content-between sidebar p-0 shadow">
+                <div>
+                    <div class="student-profile text-center pt-4">
+                        <h6 class="fw-bold mb-2 text-white" id="lblStudentName">در حال بارگذاری...</h6>
+                        <div class="text-muted small mb-2" id="lblStudentDepartment">دپارتمان: ---</div>
+                        <span class="badge bg-secondary px-2 py-1 small" id="lblStudentId">---</span>
                     </div>
 
-                    <div class="p-3 border-top border-secondary">
-                        <button class="btn btn-outline-danger w-100 btn-sm" id="btnLogout">
-                            <i class="bi bi-box-arrow-left"></i> خروج از سیستم
-                        </button>
-                    </div>
-                </nav>
-
-                <div class="col-12 col-md-9 col-lg-10">
-
-                    <div class="bg-dark text-white d-flex justify-content-between align-items-center p-3 d-md-none shadow-sm">
-                        <h6 class="m-0 fw-bold">سامانه دانشگاهی</h6>
-                        <button class="btn btn-outline-light btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#mobileSidebarMenu">
-                            <i class="fa-solid fa-bars fs-5"></i>
-                        </button>
-                    </div>
-
-                    <div class="collapse d-md-none bg-dark text-white p-3 shadow" id="mobileSidebarMenu">
-                        <div class="list-group list-group-flush" id="mobileMenuLinks">
-                            <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0 py-2" data-page="register">
-                                <i class="fa-solid fa-calendar-plus me-2"></i> انتخاب واحد
+                    <ul class="nav flex-column mt-3" id="sidebarMenu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-page="register">
+                                <i class="bi bi-calendar-plus"></i> <span>انتخاب واحد</span>
                             </a>
-                            <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0 py-2" data-page="courses">
-                                <i class="fa-solid fa-book me-2"></i> درس‌های من
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" data-page="courses">
+                                <i class="bi bi-book"></i> <span>درس‌های من</span>
                             </a>
-                        </div>
-                    </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-page="reports">
+                                <i class="bi bi-file-earmark-bar-graph"></i> <span>گزارشات</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-page="requests">
+                                <i class="bi bi-envelope-paper"></i> <span>درخواست‌ها</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
 
-                    <div id="dynamicBodyContainer" class="p-3">
+                <div class="p-3 border-top border-secondary">
+                    <button class="btn btn-outline-danger w-100 btn-sm" id="btnLogout">
+                        <i class="bi bi-box-arrow-left"></i> خروج از سیستم
+                    </button>
+                </div>
+            </nav>
+
+            <div class="col-12 col-md-9 col-lg-10">
+
+                <div class="bg-dark text-white d-flex justify-content-between align-items-center p-3 d-md-none shadow-sm">
+                    <h6 class="m-0 fw-bold">سامانه دانشگاهی</h6>
+                    <button class="btn btn-outline-light btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#mobileSidebarMenu">
+                        <i class="fa-solid fa-bars fs-5"></i>
+                    </button>
+                </div>
+
+                <div class="collapse d-md-none bg-dark text-white p-3 shadow" id="mobileSidebarMenu">
+                    <div class="list-group list-group-flush" id="mobileMenuLinks">
+                        <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0 py-2" data-page="register">
+                            <i class="fa-solid fa-calendar-plus me-2"></i> انتخاب واحد
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0 py-2" data-page="courses">
+                            <i class="fa-solid fa-book me-2"></i> درس‌های من
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0 py-2" data-page="reports">
+                            <i class="fa-solid fa-book me-2"></i> گزارشات
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0 py-2" data-page="requests">
+                            <i class="fa-solid fa-book me-2"></i> در خواست ها 
+                        </a>
                     </div>
                 </div>
+
+                <div id="dynamicBodyContainer" class="p-4">
+                </div>
             </div>
+
         </div>
+    </div>
 
-        <script src="js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+<script src="js/bootstrap.bundle.min.js"></script>
 
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const token = localStorage.getItem("token");
-                const baseApiUrl = "https://localhost:7246/api/Student";
-                const BASE_URL = "https://localhost:7246/api";
+<script>
+    const BASE_URL = "https://localhost:7246/api";
+    const baseApiUrl = "https://localhost:7246/api/Student";
+    const token = localStorage.getItem("token");
 
-                if (!token) {
-                    window.location.href = "login.html";
+    
+    document.addEventListener("DOMContentLoaded", function () {
+        if (!token) {
+            window.location.href = "login.html";
+            return;
+        }
+
+        const btnLogout = document.getElementById("btnLogout");
+        if (btnLogout) {
+            btnLogout.addEventListener("click", function () {
+                localStorage.removeItem("token");
+                window.location.href = "login.html";
+            });
+        }
+
+        try {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+                return '%' + ('0' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+
+            const userData = JSON.parse(jsonPayload);
+            const fullName = userData["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"];
+            const username = userData["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
+
+            if (fullName) document.getElementById("lblStudentName").innerText = fullName;
+            if (username) document.getElementById("lblStudentId").innerText = username;
+
+        } catch (error) {
+            console.error("خطا در پردازش توکن:", error);
+            localStorage.removeItem("token");
+            window.location.href = "login.html";
+            return;
+        }
+
+        document.addEventListener("click", function (event) {
+            if (event.target && event.target.id === "btnSubmitRequest") {
+                event.preventDefault();
+                const templateId = document.getElementById("ddlTemplates")?.value;
+                const title = document.getElementById("txtTitle")?.value;
+                const description = document.getElementById("txtDescription")?.value;
+
+                if (templateId && title) {
+                    submitWorkflowRequest(templateId, title, description);
+                } else {
+                    alert("لطفاً فیلدها را پر کنید.");
+                }
+            }
+        });
+
+        const mobileLinks = document.querySelectorAll("#mobileMenuLinks .list-group-item");
+        mobileLinks.forEach(link => {
+            link.addEventListener("click", function (e) {
+                e.preventDefault();
+                const page = this.getAttribute("data-page");
+                if (page) {
+                    loadPage(page);
+                    const transitionCollapse = bootstrap.Collapse.getInstance(document.getElementById('mobileSidebarMenu'));
+                    if (transitionCollapse) transitionCollapse.hide();
+                }
+            });
+        });
+
+        const menuLinks = document.querySelectorAll("#sidebarMenu .nav-link");
+        menuLinks.forEach(link => {
+            link.addEventListener("click", function (e) {
+                e.preventDefault();
+                menuLinks.forEach(l => l.classList.remove("active"));
+                this.classList.add("active");
+
+                const page = this.getAttribute("data-page");
+                if (page) loadPage(page);
+            });
+        });
+
+        loadStudentProfile(); 
+        loadPage("courses");  
+    });
+
+    async function loadStudentProfile() {
+        try {
+            const response = await fetch(`${baseApiUrl}/profile`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log("پروفایل دریافتی از سرور:", data); 
+
+                const fullName = data.fullName || data.FullName;
+                const departmentName = data.departmentName || data.DepartmentName;
+                const studentNumber = data.studentNumber || data.StudentNumber;
+
+                const lblName = document.getElementById('lblStudentName');
+                const lblDept = document.getElementById('lblStudentDepartment');
+                const lblId = document.getElementById('lblStudentId');
+
+                if (lblName) lblName.innerText = fullName || 'بدون نام';
+                if (lblId) lblId.innerText = studentNumber || '---';
+
+                if (lblDept) {
+                    if (departmentName) {
+                        lblDept.innerText = `دپارتمان: ${departmentName}`;
+                        lblDept.style.display = "block";
+                        lblDept.innerText = 'دپارتمان: ثبت نشده';
+                    }
+                }
+            } else {
+                console.error('خطا در دریافت اطلاعات پروفایل:', response.status, response.statusText);
+            }
+        } catch (error) {
+            console.error('خطای ارتباط با سرور در پروفایل:', error);
+        }
+    }
+
+    function loadCurrentSemesterCourses() {
+        const tbody = document.getElementById("coursesTableBody");
+        const totalUnitsLabel = document.getElementById("lblTotalUnits");
+        const apiUrl = `${baseApiUrl}/my-courses`;
+
+        if (!tbody) return;
+
+        fetch(apiUrl, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        })
+            .then(response => {
+                if (response.status === 401) { logoutSession(); return; }
+                if (!response.ok) throw new Error("خطا در دریافت اطلاعات از سرور");
+                return response.json();
+            })
+            .then(courses => {
+                tbody.innerHTML = "";
+                if (!courses || courses.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="py-4 text-warning">هیچ درسی برای شما در این ترم ثبت نشده است.</td></tr>`;
                     return;
                 }
 
-                document.getElementById("btnLogout").addEventListener("click", function () {
-                    localStorage.removeItem("token");
-                    window.location.href = "login.html";
+                let totalUnits = 0;
+                courses.forEach((course, index) => {
+                    const unitCount = parseInt(course.courseUnit || course.CourseUnit) || 0;
+                    totalUnits += unitCount;
+
+                    const courseId = course.courseId || course.CourseId;
+                    const courseTitle = course.courseTitle || course.CourseTitle;
+                    const instructorName = course.instructorName || course.InstructorName || 'بدون استاد';
+                    const grade = course.grade !== undefined ? course.grade : course.Grade;
+
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td><code class="text-info">CRS-${courseId}</code></td>
+                        <td class="text-start ps-4 fw-bold">${courseTitle}</td>
+                        <td>${unitCount} واحد</td>
+                        <td>${instructorName}</td>
+                        <td>
+                            <span class="badge ${grade !== null && grade !== undefined ? 'bg-success' : 'bg-primary'} px-2 py-1">
+                                ${grade !== null && grade !== undefined ? `نمره: ${grade}` : 'جاری (بدون نمره)'}
+                            </span>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
                 });
 
-                try {
-                    const base64Url = token.split('.')[1];
-                    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-                    const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
-                        return '%' + ('0' + c.charCodeAt(0).toString(16)).slice(-2);
-                    }).join(''));
+                if (totalUnitsLabel) totalUnitsLabel.innerText = `تعداد واحد ثبت‌شده: ${totalUnits}`;
+            })
+            .catch(error => {
+                if (tbody) tbody.innerHTML = `<tr><td colspan="6" class="py-4 text-danger">خطا در بارگذاری اطلاعات: ${error.message}</td></tr>`;
+            });
+    }
 
-                    const userData = JSON.parse(jsonPayload);
-                    const fullName = userData["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"];
-                    const username = userData["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
+    function loadAvailableCourses() {
+        const tbody = document.getElementById("availableCoursesTableBody");
+        const semesterHeader = document.getElementById("lblSemesterHeader");
+        const apiUrl = `${baseApiUrl}/available`;
 
-                    if (fullName) document.getElementById("lblStudentName").innerText = fullName;
-                    if (username) document.getElementById("lblStudentId").innerText = username;
+        if (!tbody) return;
 
-                } catch (error) {
-                    console.error("خطا در پردازش توکن:", error);
-                    localStorage.removeItem("token");
-                    window.location.href = "login.html";
+        fetch(apiUrl, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        })
+            .then(response => {
+                if (response.status === 401) { logoutSession(); return; }
+                if (!response.ok) throw new Error("خطا در دریافت اطلاعات انتخاب واحد");
+                return response.json();
+            })
+            .then(courses => {
+                tbody.innerHTML = "";
+                if (!courses || courses.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" class="py-4 text-warning">در حال حاضر هیچ درسی برای انتخاب واحد ارائه نشده است.</td></tr>`;
                     return;
                 }
 
-                function loadCurrentSemesterCourses() {
-                    const tbody = document.getElementById("coursesTableBody");
-                    const totalUnitsLabel = document.getElementById("lblTotalUnits");
-                    const apiUrl = `${baseApiUrl}/my-courses`;
-
-                    if (!tbody) return;
-
-                    fetch(apiUrl, {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${token}`,
-                            "Content-Type": "application/json"
-                        }
-                    })
-                        .then(response => {
-                            if (response.status === 401) { logoutSession(); return; }
-                            if (!response.ok) throw new Error("خطا در دریافت اطلاعات از سرور");
-                            return response.json();
-                        })
-                        .then(courses => {
-                            tbody.innerHTML = "";
-                            if (!courses || courses.length === 0) {
-                                tbody.innerHTML = `<tr><td colspan="6" class="py-4 text-warning">هیچ درسی برای شما در این ترم ثبت نشده است.</td></tr>`;
-                                return;
-                            }
-
-                            let totalUnits = 0;
-                            courses.forEach((course, index) => {
-                                const unitCount = parseInt(course.courseUnit || course.CourseUnit) || 0;
-                                totalUnits += unitCount;
-
-                                const courseId = course.courseId || course.CourseId;
-                                const courseTitle = course.courseTitle || course.CourseTitle;
-                                const instructorName = course.instructorName || course.InstructorName || 'بدون استاد';
-                                const grade = course.grade !== undefined ? course.grade : course.Grade;
-
-                                const row = document.createElement("tr");
-                                row.innerHTML = `
-                                        <td>${index + 1}</td>
-                                        <td><code class="text-info">CRS-${courseId}</code></td>
-                                        <td class="text-start ps-4 fw-bold">${courseTitle}</td>
-                                        <td>${unitCount} واحد</td>
-                                        <td>${instructorName}</td>
-                                        <td>
-                                            <span class="badge ${grade !== null && grade !== undefined ? 'bg-success' : 'bg-primary'} px-2 py-1">
-                                                ${grade !== null && grade !== undefined ? `نمره: ${grade}` : 'جاری (بدون نمره)'}
-                                            </span>
-                                        </td>
-                                    `;
-                                tbody.appendChild(row);
-                            });
-
-                            if (totalUnitsLabel) totalUnitsLabel.innerText = `تعداد واحد ثبت‌شده: ${totalUnits}`;
-                        })
-                        .catch(error => {
-                            if (tbody) tbody.innerHTML = `<tr><td colspan="6" class="py-4 text-danger">خطا در بارگذاری اطلاعات: ${error.message}</td></tr>`;
-                        });
+                const firstCourseSemester = courses[0].semesterName || courses[0].SemesterName;
+                if (semesterHeader && firstCourseSemester) {
+                    semesterHeader.innerText = `لیست دروس ارائه شده برای انتخاب واحد - ${firstCourseSemester}`;
                 }
 
-                function loadAvailableCourses() {
-                    const tbody = document.getElementById("availableCoursesTableBody");
-                    const semesterHeader = document.getElementById("lblSemesterHeader");
-                    const apiUrl = `${baseApiUrl}/available`;
+                courses.forEach((course, index) => {
+                    const id = course.id || course.Id;
+                    const title = course.title || course.Title;
+                    const unit = course.unit || course.Unit;
+                    const instructorName = course.instructorName || course.InstructorName || 'بدون استاد';
+                    const remainingCapacity = course.remainingCapacity !== undefined ? course.remainingCapacity : course.RemainingCapacity;
+                    const capacity = course.capacity || course.Capacity;
 
-                    if (!tbody) return;
+                    const isFull = remainingCapacity <= 0;
+                    const capacityBadge = isFull ? 'bg-danger' : 'bg-success';
+                    const btnClass = isFull ? 'btn-secondary' : 'btn-primary';
+                    const btnText = isFull ? 'ظرفیت تکمیل' : 'اخذ درس';
+                    const btnDisabled = isFull ? 'disabled' : '';
 
-                    fetch(apiUrl, {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${token}`,
-                            "Content-Type": "application/json"
-                        }
-                    })
-                        .then(response => {
-                            if (response.status === 401) { logoutSession(); return; }
-                            if (!response.ok) throw new Error("خطا در دریافت اطلاعات انتخاب واحد");
-                            return response.json();
-                        })
-                        .then(courses => {
-                            tbody.innerHTML = "";
-                            if (!courses || courses.length === 0) {
-                                tbody.innerHTML = `<tr><td colspan="7" class="py-4 text-warning">در حال حاضر هیچ درسی برای انتخاب واحد ارائه نشده است.</td></tr>`;
-                                return;
-                            }
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td><code class="text-info">CRS-${id}</code></td>
+                        <td class="text-start ps-4 fw-bold">${title}</td>
+                        <td>${unit} واحد</td>
+                        <td>${instructorName}</td>
+                        <td>
+                            <span class="badge ${capacityBadge} px-2 py-1">
+                                ${remainingCapacity} از ${capacity}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn ${btnClass} btn-sm px-3" ${btnDisabled} onclick="enrollInCourse(${id}, event)">
+                                ${btnText}
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                tbody.innerHTML = `<tr><td colspan="7" class="py-4 text-danger">خطا در بارگذاری اطلاعات: ${error.message}</td></tr>`;
+            });
+    }
 
-                            const firstCourseSemester = courses[0].semesterName || courses[0].SemesterName;
-                            if (semesterHeader && firstCourseSemester) {
-                                semesterHeader.innerText = `لیست دروس ارائه شده برای انتخاب واحد - ${firstCourseSemester}`;
-                            }
+    window.enrollInCourse = function (courseId, event) {
+        const apiUrl = `${baseApiUrl}/enroll`;
+        const btn = event.target;
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status"></span> در حال اخذ...`;
 
-                            courses.forEach((course, index) => {
-                                const id = course.id || course.Id;
-                                const title = course.title || course.Title;
-                                const unit = course.unit || course.Unit;
-                                const instructorName = course.instructorName || course.InstructorName || 'بدون استاد';
-                                const remainingCapacity = course.remainingCapacity !== undefined ? course.remainingCapacity : course.RemainingCapacity;
-                                const capacity = course.capacity || course.Capacity;
+        fetch(apiUrl, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ courseId: courseId })
+        })
+            .then(async response => {
+                if (response.status === 401) { logoutSession(); return; }
+                if (response.ok) {
+                    alert("درس با موفقیت اخذ شد! 🎉");
+                    loadAvailableCourses();
+                } else {
+                    const errorText = await response.text();
+                    try {
+                        const errorObj = JSON.parse(errorText);
+                        alert(`خطا: ${errorObj.message || "امکان اخذ این درس وجود ندارد."}`);
+                    } catch {
+                        alert(`خطا در اخذ درس: ${errorText || "پاسخ نامشخص از سرور"}`);
+                    }
+                }
+            })
+            .catch(error => {
+                console.error("خطا در ارتباط:", error);
+                alert("ارتباط با سرور برقرار نشد.");
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            });
+    };
 
-                                const isFull = remainingCapacity <= 0;
-                                const capacityBadge = isFull ? 'bg-danger' : 'bg-success';
-                                const btnClass = isFull ? 'btn-secondary' : 'btn-primary';
-                                const btnText = isFull ? 'ظرفیت تکمیل' : 'اخذ درس';
-                                const btnDisabled = isFull ? 'disabled' : '';
+    window.loadFullTranscript = function () {
+        const overallTbody = document.getElementById("overallTranscriptTableBody");
+        const lblOverallGPA = document.getElementById("lblOverallGPA");
+        const lblOverallPassedUnits = document.getElementById("lblOverallPassedUnits");
+        const lblOverallStatus = document.getElementById("lblOverallStatus");
+        const selectElement = document.getElementById("ddlSemesters");
 
-                                const row = document.createElement("tr");
-                                row.innerHTML = `
-                                        <td>${index + 1}</td>
-                                        <td><code class="text-info">CRS-${id}</code></td>
-                                        <td class="text-start ps-4 fw-bold">${title}</td>
-                                        <td>${unit} واحد</td>
-                                        <td>${instructorName}</td>
-                                        <td>
-                                            <span class="badge ${capacityBadge} px-2 py-1">
-                                                ${remainingCapacity} از ${capacity}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <button class="btn ${btnClass} btn-sm px-3" ${btnDisabled} onclick="enrollInCourse(${id}, event)">
-                                                ${btnText}
-                                            </button>
-                                        </td>
-                                    `;
-                                tbody.appendChild(row);
-                            });
-                        })
-                        .catch(error => {
-                            tbody.innerHTML = `<tr><td colspan="7" class="py-4 text-danger">خطا در بارگذاری اطلاعات: ${error.message}</td></tr>`;
-                        });
+        if (!overallTbody) return;
+
+        overallTbody.innerHTML = '<tr><td colspan="5" class="text-center"><span class="spinner-border spinner-border-sm me-2"></span>در حال بارگذاری کارنامه کل...</td></tr>';
+
+        fetch(`${baseApiUrl}/Fulltranscrip`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        })
+            .then(response => {
+                if (!response.ok) throw new Error("مشکلی در دریافت کارنامه کل رخ داد.");
+                return response.json();
+            })
+            .then(transcript => {
+                overallTbody.innerHTML = "";
+                if (!transcript) {
+                    overallTbody.innerHTML = '<tr><td colspan="5" class="text-center text-warning">اطلاعاتی برای نمایش وجود ندارد.</td></tr>';
+                    return;
                 }
 
-                window.enrollInCourse = function (courseId, event) {
-                    const apiUrl = `${baseApiUrl}/enroll`;
-                    const btn = event.target;
-                    const originalText = btn.innerHTML;
-                    btn.disabled = true;
-                    btn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status"></span> در حال اخذ...`;
+                const overallGpa = transcript.totalGpa !== undefined ? transcript.totalGpa : (transcript.TotalGpa !== undefined ? transcript.TotalGpa : null);
+                const overallCredits = transcript.totalCredits !== undefined ? transcript.totalCredits : (transcript.TotalCredits !== undefined ? transcript.TotalCredits : 0);
+                const overallStatus = transcript.overallStatus || transcript.OverallStatus || (overallGpa >= 12 ? "عادی" : "مشروط");
 
-                    fetch(apiUrl, {
-                        method: "POST",
-                        headers: {
-                            "Authorization": `Bearer ${token}`,
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({ courseId: courseId })
-                    })
-                        .then(async response => {
-                            if (response.status === 401) { logoutSession(); return; }
-                            if (response.ok) {
-                                alert("درس با موفقیت اخذ شد! 🎉");
-                                loadAvailableCourses();
-                            } else {
-                                const errorText = await response.text();
-                                try {
-                                    const errorObj = JSON.parse(errorText);
-                                    alert(`خطا: ${errorObj.message || "امکان اخذ این درس وجود ندارد."}`);
-                                } catch {
-                                    alert(`خطا در اخذ درس: ${errorText || "پاسخ نامشخص از سرور"}`);
-                                }
-                            }
-                        })
-                        .catch(error => {
-                            console.error("خطا در ارتباط:", error);
-                            alert("ارتباط با سرور برقرار نشد.");
-                        })
-                        .finally(() => {
-                            btn.disabled = false;
-                            btn.innerHTML = originalText;
-                        });
-                };
+                if (lblOverallGPA) lblOverallGPA.innerText = overallGpa !== null ? overallGpa : "---";
+                if (lblOverallPassedUnits) lblOverallPassedUnits.innerText = `${overallCredits} واحد`;
+                if (lblOverallStatus) {
+                    lblOverallStatus.innerText = overallStatus;
+                    lblOverallStatus.className = `fw-bold ${overallGpa >= 12 ? 'text-success' : 'text-danger'}`;
+                }
 
-                window.loadFullTranscript = function () {
-                    const overallTbody = document.getElementById("overallTranscriptTableBody");
-                    const lblOverallGPA = document.getElementById("lblOverallGPA");
-                    const lblOverallPassedUnits = document.getElementById("lblOverallPassedUnits");
-                    const lblOverallStatus = document.getElementById("lblOverallStatus");
-                    const selectElement = document.getElementById("ddlSemesters"); // اضافه شد
+                const semesters = transcript.semesters || transcript.Semesters;
+                if (!semesters || semesters.length === 0) {
+                    overallTbody.innerHTML = '<tr><td colspan="5" class="text-center text-warning">هیچ ترمی یافت نشد.</td></tr>';
+                    if (selectElement) selectElement.innerHTML = '<option value="">ترمی یافت نشد</option>';
+                    return;
+                }
 
-                    if (!overallTbody) return;
+                if (selectElement) {
+                    selectElement.innerHTML = "";
+                    semesters.forEach(sem => {
+                        const id = sem.semesterId || sem.SemesterId || sem.id;
+                        const name = sem.semesterName || sem.SemesterName || sem.name || `نیمسال ${id}`;
 
-                    overallTbody.innerHTML = '<tr><td colspan="5" class="text-center"><span class="spinner-border spinner-border-sm me-2"></span>در حال بارگذاری کارنامه کل...</td></tr>';
+                        const option = document.createElement("option");
+                        option.value = id;
+                        option.innerText = name;
+                        selectElement.appendChild(option);
+                    });
 
-                    fetch(`${baseApiUrl}/Fulltranscrip`, {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${token}`,
-                            "Content-Type": "application/json"
+                    selectElement.onchange = function () {
+                        if (this.value) loadSemesterTranscript(this.value);
+                    };
+
+                    const firstSemesterId = semesters[0].semesterId || semesters[0].SemesterId || semesters[0].id;
+                    loadSemesterTranscript(firstSemesterId);
+                }
+
+                semesters.forEach((sem, index) => {
+                    const semName = sem.semesterName || sem.SemesterName || `نیمسال ${sem.semesterId || index + 1}`;
+                    const semCredits = sem.semesterCredits !== undefined ? sem.semesterCredits : 0;
+                    const semGpa = sem.semesterGpa !== undefined ? sem.semesterGpa : null;
+                    const status = sem.termStatus || sem.TermStatus || (semGpa >= 12 || semGpa === null ? "عادی" : "مشروط");
+
+                    const row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td class="text-start ps-4 fw-bold text-info">${semName}</td>
+                        <td>${semCredits} واحد</td>
+                        <td><span class="badge bg-primary px-3 py-1 fs-6">${semGpa !== null ? semGpa : "ثبت نشده"}</span></td>
+                        <td><span class="badge ${semGpa >= 12 || semGpa === null ? 'bg-success' : 'bg-danger'} px-2 py-1">${status}</span></td>
+                    </tr>
+                `;
+                    overallTbody.insertAdjacentHTML("beforeend", row);
+                });
+            })
+            .catch(error => {
+                overallTbody.innerHTML = `<tr><td colspan="5" class="text-center text-danger">خطا: ${error.message}</td></tr>`;
+                if (selectElement) selectElement.innerHTML = '<option value="">خطا در بارگذاری</option>';
+            });
+    };
+
+    window.loadSemesterTranscript = function (semesterId) {
+        const tbody = document.getElementById("semesterTranscriptTableBody");
+        const summaryPanel = document.getElementById("semesterSummaryBadges");
+
+        if (!tbody) return;
+
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center"><span class="spinner-border spinner-border-sm me-2"></span>در حال دریافت کارنامه ترمی...</td></tr>';
+
+        fetch(`${baseApiUrl}/transcript/semester?semesterId=${semesterId}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        })
+            .then(response => {
+                if (response.status === 401) { logoutSession(); return; }
+                if (response.status === 403) { throw new Error("دسترسی غیرمجاز (خطای ۴۰۳)"); }
+                if (!response.ok) throw new Error("دریافت کارنامه ترمی با خطا مواجه شد.");
+                return response.json();
+            })
+            .then(data => {
+                tbody.innerHTML = "";
+                if (!data) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center text-warning">اطلاعاتی یافت نشد.</td></tr>';
+                    return;
+                }
+
+                if (summaryPanel) {
+                    summaryPanel.classList.remove("d-none");
+                    const semGpa = data.semesterGpa !== undefined ? data.semesterGpa : (data.SemesterGpa !== undefined ? data.SemesterGpa : null);
+                    const semCredits = data.semesterCredits !== undefined ? data.semesterCredits : (data.SemesterCredits !== undefined ? data.SemesterCredits : 0);
+
+                    document.getElementById("lblSemGPA").innerText = semGpa !== null ? semGpa : "---";
+                    document.getElementById("lblSemCredits").innerText = semCredits;
+
+                    const statusText = data.termStatus || data.TermStatus || (semGpa >= 12 || semGpa === null ? "عادی" : "مشروط");
+                    document.getElementById("lblSemStatus").innerText = statusText;
+
+                    const badgeEl = document.getElementById("lblSemStatusBadge");
+                    badgeEl.className = `badge p-2 ${semGpa >= 12 || semGpa === null ? 'bg-success' : 'bg-danger'}`;
+                }
+
+                const courses = data.courses || data.Courses;
+                if (!courses || courses.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center text-warning py-4">هیچ درسی در این ترم ثبت نشده است (دروس خالی یا جاری).</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = "";
+                courses.forEach(course => {
+                    const courseCode = course.courseCode || course.CourseCode || `CRS-${course.courseId || course.Id}`;
+                    const courseTitle = course.courseTitle || course.CourseTitle || "نامشخص";
+                    const credits = course.credits || course.Credits || course.courseUnit || 0;
+
+                    let rawGrade = course.grade;
+                    let gradeDisplay = "ثبت نشده";
+                    let statusText = "در انتظار ثبت";
+                    let badgeClass = "bg-warning text-dark";
+
+                    if (rawGrade !== null && rawGrade !== undefined && rawGrade !== "ثبت نشده") {
+                        const numericGrade = parseFloat(rawGrade);
+                        gradeDisplay = numericGrade.toFixed(2);
+
+                        if (numericGrade >= 10) {
+                            statusText = "قبول";
+                            badgeClass = "bg-success";
+                        } else {
+                            statusText = "مردود";
+                            badgeClass = "bg-danger";
                         }
-                    })
-                        .then(response => {
-                            if (!response.ok) throw new Error("مشکلی در دریافت کارنامه کل رخ داد.");
-                            return response.json();
-                        })
-                        .then(transcript => {
-                            overallTbody.innerHTML = "";
-                            if (!transcript) {
-                                overallTbody.innerHTML = '<tr><td colspan="5" class="text-center text-warning">اطلاعاتی برای نمایش وجود ندارد.</td></tr>';
-                                return;
-                            }
+                    }
 
-                            const overallGpa = transcript.totalGpa !== undefined ? transcript.totalGpa : (transcript.TotalGpa !== undefined ? transcript.TotalGpa : null);
-                            const overallCredits = transcript.totalCredits !== undefined ? transcript.totalCredits : (transcript.TotalCredits !== undefined ? transcript.TotalCredits : 0);
-                            const overallStatus = transcript.overallStatus || transcript.OverallStatus || (overallGpa >= 12 ? "عادی" : "مشروط");
-
-                            if (lblOverallGPA) lblOverallGPA.innerText = overallGpa !== null ? overallGpa : "---";
-                            if (lblOverallPassedUnits) lblOverallPassedUnits.innerText = `${overallCredits} واحد`;
-                            if (lblOverallStatus) {
-                                lblOverallStatus.innerText = overallStatus;
-                                lblOverallStatus.className = `fw-bold ${overallGpa >= 12 ? 'text-success' : 'text-danger'}`;
-                            }
-
-                            const semesters = transcript.semesters || transcript.Semesters;
-                            if (!semesters || semesters.length === 0) {
-                                overallTbody.innerHTML = '<tr><td colspan="5" class="text-center text-warning">هیچ ترمی یافت نشد.</td></tr>';
-                                if (selectElement) selectElement.innerHTML = '<option value="">ترمی یافت نشد</option>';
-                                return;
-                            }
-
-                            if (selectElement) {
-                                selectElement.innerHTML = "";
-
-                                semesters.forEach(sem => {
-                                    const id = sem.semesterId || sem.SemesterId || sem.id;
-                                    const name = sem.semesterName || sem.SemesterName || sem.name || `نیمسال ${id}`;
-
-                                    const option = document.createElement("option");
-                                    option.value = id;
-                                    option.innerText = name;
-                                    selectElement.appendChild(option);
-                                });
-
-                                selectElement.onchange = function () {
-                                    if (this.value) loadSemesterTranscript(this.value);
-                                };
-
-                                const firstSemesterId = semesters[0].semesterId || semesters[0].SemesterId || semesters[0].id;
-                                loadSemesterTranscript(firstSemesterId);
-                            }
-
-                            semesters.forEach((sem, index) => {
-                                const semName = sem.semesterName || sem.SemesterName || `نیمسال ${sem.semesterId || index + 1}`;
-                                const semCredits = sem.semesterCredits !== undefined ? sem.semesterCredits : 0;
-                                const semGpa = sem.semesterGpa !== undefined ? sem.semesterGpa : null;
-                                const status = sem.termStatus || sem.TermStatus || (semGpa >= 12 || semGpa === null ? "عادی" : "مشروط");
-
-                                const row = `
+                    const row = `
                         <tr>
-                            <td>${index + 1}</td>
-                            <td class="text-start ps-4 fw-bold text-info">${semName}</td>
-                            <td>${semCredits} واحد</td>
-                            <td><span class="badge bg-primary px-3 py-1 fs-6">${semGpa !== null ? semGpa : "ثبت نشده"}</span></td>
-                            <td><span class="badge ${semGpa >= 12 || semGpa === null ? 'bg-success' : 'bg-danger'} px-2 py-1">${status}</span></td>
+                            <td><code class="text-info">${courseCode}</code></td>
+                            <td class="text-start ps-4 fw-bold">${courseTitle}</td>
+                            <td>${credits} واحد</td>
+                            <td><strong class="${rawGrade !== null && rawGrade !== undefined && rawGrade !== 'ثبت نشده' ? 'text-white' : 'text-warning'}">${gradeDisplay}</strong></td>
+                            <td>
+                                <span class="badge ${badgeClass} px-3 py-2">
+                                    ${statusText}
+                                </span>
+                            </td>
                         </tr>
                     `;
-                                overallTbody.insertAdjacentHTML("beforeend", row);
-                            });
-                        })
-                        .catch(error => {
-                            overallTbody.innerHTML = `<tr><td colspan="5" class="text-center text-danger">خطا: ${error.message}</td></tr>`;
-                            if (selectElement) selectElement.innerHTML = '<option value="">خطا در بارگذاری</option>';
-                        });
-                };
-
-                window.loadSemesterTranscript = function (semesterId) {
-                    const tbody = document.getElementById("semesterTranscriptTableBody");
-                    const summaryPanel = document.getElementById("semesterSummaryBadges");
-
-                    if (!tbody) return;
-
-                    tbody.innerHTML = '<tr><td colspan="5" class="text-center"><span class="spinner-border spinner-border-sm me-2"></span>در حال دریافت کارنامه ترمی...</td></tr>';
-
-                    fetch(`${baseApiUrl}/transcript/semester?semesterId=${semesterId}`, {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${token}`,
-                            "Content-Type": "application/json"
-                        }
-                    })
-                        .then(response => {
-                            if (response.status === 401) { logoutSession(); return; }
-                            if (response.status === 403) { throw new Error("دسترسی غیرمجاز (خطای ۴۰۳)"); }
-                            if (!response.ok) throw new Error("دریافت کارنامه ترمی با خطا مواجه شد.");
-                            return response.json();
-                        })
-                        .then(data => {
-                            tbody.innerHTML = "";
-                            if (!data) {
-                                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-warning">اطلاعاتی یافت نشد.</td></tr>';
-                                return;
-                            }
-
-                            if (summaryPanel) {
-                                summaryPanel.classList.remove("d-none");
-                                const semGpa = data.semesterGpa !== undefined ? data.semesterGpa : (data.SemesterGpa !== undefined ? data.SemesterGpa : null);
-                                const semCredits = data.semesterCredits !== undefined ? data.semesterCredits : (data.SemesterCredits !== undefined ? data.SemesterCredits : 0);
-
-                                document.getElementById("lblSemGPA").innerText = semGpa !== null ? semGpa : "---";
-                                document.getElementById("lblSemCredits").innerText = semCredits;
-
-                                const statusText = data.termStatus || data.TermStatus || (semGpa >= 12 || semGpa === null ? "عادی" : "مشروط");
-                                document.getElementById("lblSemStatus").innerText = statusText;
-
-                                const badgeEl = document.getElementById("lblSemStatusBadge");
-                                badgeEl.className = `badge p-2 ${semGpa >= 12 || semGpa === null ? 'bg-success' : 'bg-danger'}`;
-                            }
-
-                            const courses = data.courses || data.Courses;
-                            if (!courses || courses.length === 0) {
-                                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-warning py-4">هیچ درسی در این ترم ثبت نشده است (دروس خالی یا جاری).</td></tr>';
-                                return;
-                            }
-
-                            tbody.innerHTML = ""; 
-
-                            courses.forEach(course => {
-                                const courseCode = course.courseCode || course.CourseCode || `CRS-${course.courseId || course.Id}`;
-                                const courseTitle = course.courseTitle || course.CourseTitle || "نامشخص";
-                                const credits = course.credits || course.Credits || course.courseUnit || 0;
-
-                                let rawGrade = course.grade;
-                                let gradeDisplay = "ثبت نشده";
-                                let statusText = "در انتظار ثبت";
-                                let badgeClass = "bg-warning text-dark"; 
-
-                                if (rawGrade !== null && rawGrade !== undefined && rawGrade !== "ثبت نشده") {
-                                    const numericGrade = parseFloat(rawGrade);
-                                    gradeDisplay = numericGrade.toFixed(2); 
-
-                                    if (numericGrade >= 10) {
-                                        statusText = "قبول";
-                                        badgeClass = "bg-success"; 
-                                    } else {
-                                        statusText = "مردود";
-                                        badgeClass = "bg-danger"; 
-                                    }
-                                }
-
-                                const row = `
-                            <tr>
-                                <td><code class="text-info">${courseCode}</code></td>
-                                <td class="text-start ps-4 fw-bold">${courseTitle}</td>
-                                <td>${credits} واحد</td>
-                                <td><strong class="${rawGrade !== null && rawGrade !== undefined && rawGrade !== 'ثبت نشده' ? 'text-white' : 'text-warning'}">${gradeDisplay}</strong></td>
-                                <td>
-                                    <span class="badge ${badgeClass} px-3 py-2">
-                                        ${statusText}
-                                    </span>
-                                </td>
-                            </tr>
-                        `;
-
-                                tbody.insertAdjacentHTML("beforeend", row);
-                            });
-
-                            const gpaElement = document.getElementById("lblOverallGPA");
-                            if (gpaElement && data.gpa) {
-                                gpaElement.innerText = parseFloat(data.gpa).toFixed(2);
-                            }
-                        })
-                        .catch(error => {
-                            tbody.innerHTML = `<tr><td colspan="5" class="text-center text-danger py-4">خطا در پردازش اطلاعات: ${error.message}</td></tr>`;
-                        });
-                };
-                window.loadMyRequests = async function () {
-                    try {
-                        const response = await fetch(`${baseApiUrl}/my-workflow-requests`, {
-                            method: 'GET',
-                            headers: { 'Authorization': `Bearer ${token}` }
-                        });
-                        if (response.ok) {
-                            const requests = await response.json();
-                            const tbody = document.getElementById("requestsTableBody");
-                            if (tbody) {
-                                tbody.innerHTML = "";
-                                requests.forEach(req => {
-                                    tbody.innerHTML += `<tr><td>${req.title}</td><td>${req.templateName}</td><td><span class="badge ${req.status === 'Pending' ? 'bg-warning' : 'bg-success'}">${req.status}</span></td></tr>`;
-                                });
-                            }
-                        }
-                    } catch (error) { console.error("خطا در بارگذاری درخواست‌ها:", error); }
-                };
-
-                window.loadWorkflowTemplates = async function () {
-                    try {
-                        const response = await fetch(`${baseApiUrl}/workflow-templates`, {
-                            method: 'GET',
-                            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
-                        });
-                        if (response.ok) {
-                            const templates = await response.json();
-                            const ddl = document.getElementById("ddlTemplates");
-                            if (ddl) {
-                                ddl.innerHTML = '<option value="">یک مورد را انتخاب کنید...</option>';
-                                templates.forEach(t => ddl.innerHTML += `<option value="${t.id}">${t.name}</option>`);
-                            }
-                        }
-                    } catch (error) { console.error("خطا در دریافت قالب‌ها:", error); }
-                };
-
-                window.submitWorkflowRequest = async function (templateId, title, description) {
-                    if (!title || !description) { alert("لطفاً عنوان و توضیحات را وارد کنید."); return; }
-                    try {
-                        const response = await fetch(`${baseApiUrl}/submit-workflow-request`, {
-                            method: 'POST',
-                            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ templateId: parseInt(templateId), title, description })
-                        });
-                        if (response.ok) {
-                            alert("درخواست شما با موفقیت ثبت شد.");
-                            loadMyRequests();
-                        } else {
-                            const err = await response.json();
-                            alert(`خطا: ${err.message || "امکان ثبت درخواست وجود ندارد."}`);
-                        }
-                    } catch (error) { console.error("خطا:", error); alert("خطا در اتصال به سرور."); }
-                };
-                function loadPage(pageName) {
-                    const container = document.getElementById("dynamicBodyContainer");
-
-                    fetch(`pages/${pageName}.html`)
-                        .then(response => {
-                            if (!response.ok) throw new Error("صفحه مورد نظر یافت نشد.");
-                            return response.text();
-                        })
-                        .then(html => {
-                            container.innerHTML = html;
-
-                            if (pageName === "courses") {
-                                loadCurrentSemesterCourses();
-                            }
-                            else if (pageName === "register") {
-                                loadAvailableCourses();
-                            }
-                            else if (pageName === "reports") {
-                                loadFullTranscript();
-                            }
-                             else if (pageName === "requests") {
-                                    loadMyRequests();
-                                    loadWorkflowTemplates();
-                                
-
-                            }
-                        })
-                        .catch(error => {
-                            container.innerHTML = `<div class="alert alert-danger">خطا در بارگذاری زیر صفحه: ${error.message}</div>`;
-                        });
-                }
-
-                const mobileLinks = document.querySelectorAll("#mobileMenuLinks .list-group-item");
-                mobileLinks.forEach(link => {
-                    link.addEventListener("click", function (e) {
-                        e.preventDefault();
-                        const page = this.getAttribute("data-page");
-                        if (page) {
-                            loadPage(page); 
-                            const transitionCollapse = bootstrap.Collapse.getInstance(document.getElementById('mobileSidebarMenu'));
-                            if (transitionCollapse) transitionCollapse.hide();
-                        }
-                    });
-                });
-                const menuLinks = document.querySelectorAll("#sidebarMenu .nav-link");
-                menuLinks.forEach(link => {
-                    link.addEventListener("click", function (e) {
-                        e.preventDefault();
-                        menuLinks.forEach(l => l.classList.remove("active"));
-                        this.classList.add("active");
-
-                        const page = this.getAttribute("data-page");
-                        if (page) loadPage(page);
-                    });
+                    tbody.insertAdjacentHTML("beforeend", row);
                 });
 
-                function logoutSession() {
-                    alert("نشست شما منقضی شده است. لطفا دوباره وارد شوید.");
-                    localStorage.removeItem("token");
-                    window.location.href = "login.html";
+                const gpaElement = document.getElementById("lblOverallGPA");
+                if (gpaElement && data.gpa) {
+                    gpaElement.innerText = parseFloat(data.gpa).toFixed(2);
                 }
-
-                loadPage("courses");
+            })
+            .catch(error => {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-danger py-4">خطا در پردازش اطلاعات: ${error.message}</td></tr>`;
             });
-        </script>
+    };
+
+    window.loadMyRequests = async function () {
+        try {
+            const response = await fetch(`${baseApiUrl}/my-workflow-requests`, {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (response.ok) {
+                const requests = await response.json();
+                const tbody = document.getElementById("requestsTableBody");
+
+                if (tbody) {
+                    tbody.innerHTML = "";
+                    requests.forEach((req, index) => {
+                        const statusClass = req.status === 'Pending' ? 'bg-warning' : 'bg-success';
+                        const shamsiDate = req.createdAtPersian || '---';
+
+                        tbody.innerHTML += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${req.title}</td>
+                            <td> ${req.templateName}</td>
+                            <td><span class="badge ${statusClass}">${req.status}</span></td>
+                            <td>${shamsiDate}</td>
+                        </tr>`;
+                    });
+                }
+            }
+        } catch (error) {
+            console.error("خطا در بارگذاری درخواست‌ها:", error);
+        }
+    };
+
+    window.loadWorkflowTemplates = async function () {
+        try {
+            const response = await fetch(`${baseApiUrl}/workflow-templates`, {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+            });
+            if (response.ok) {
+                const templates = await response.json();
+                const ddl = document.getElementById("ddlTemplates");
+                if (ddl) {
+                    ddl.innerHTML = '<option value="">یک مورد را انتخاب کنید...</option>';
+                    templates.forEach(t => ddl.innerHTML += `<option value="${t.id}">${t.name}</option>`);
+                }
+            }
+        } catch (error) { console.error("خطا در دریافت قالب‌ها:", error); }
+    };
+
+    window.submitWorkflowRequest = async function (templateId, title, description) {
+        if (!title || !description) { alert("لطفاً عنوان و توضیحات را وارد کنید."); return; }
+
+        const submitBtn = document.getElementById("btnSubmitRequest");
+        if (submitBtn) submitBtn.disabled = true;
+        try {
+            const response = await fetch(`${baseApiUrl}/submit-workflow-request`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ templateId: parseInt(templateId), title, description })
+            });
+            if (response.ok) {
+                alert("درخواست شما با موفقیت ثبت شد.");
+                loadMyRequests();
+            } else {
+                const err = await response.json();
+                alert(`خطا: ${err.message || "امکان ثبت درخواست وجود ندارد."}`);
+            }
+        } catch (error) {
+            console.error("خطا:", error); alert("خطا در اتصال به سرور.");
+        }
+        finally {
+            if (submitBtn) submitBtn.disabled = false;
+        }
+    };
+
+    function loadPage(pageName) {
+        const container = document.getElementById("dynamicBodyContainer");
+        if (!container) return;
+
+        fetch(`pages/${pageName}.html`)
+            .then(response => {
+                if (!response.ok) throw new Error("صفحه مورد نظر یافت نشد.");
+                return response.text();
+            })
+            .then(html => {
+                container.innerHTML = html;
+
+                if (pageName === "courses") loadCurrentSemesterCourses();
+                else if (pageName === "register") loadAvailableCourses();
+                else if (pageName === "reports") loadFullTranscript();
+                else if (pageName === "requests") {
+                    loadMyRequests();
+                    loadWorkflowTemplates();
+                }
+            })
+            .catch(error => {
+                container.innerHTML = `<div class="alert alert-danger">خطا در بارگذاری زیر صفحه: ${error.message}</div>`;
+            });
+    }
+
+    function logoutSession() {
+        alert("نشست شما منقضی شده است. لطفا دوباره وارد شوید.");
+        localStorage.removeItem("token");
+        window.location.href = "login.html";
+    }
+</script>
     </body>
 </html>

@@ -18,9 +18,9 @@ namespace University_system.Controllers
         }
 
         [HttpGet("workflow-requests-cartable")]
-        public async Task<IActionResult> GetStaffCartable([FromQuery] int semesterId)
+        public async Task<IActionResult> GetStaffCartable()
         {
-            var requests = await _workflowRequestService.GetStaffCartableAsync(semesterId);
+            var requests = await _workflowRequestService.GetStaffCartableAsync();
             return Ok(requests);
         }
 

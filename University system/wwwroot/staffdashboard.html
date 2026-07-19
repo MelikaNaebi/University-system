@@ -1,10 +1,307 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="fa" dir="rtl">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد کارشناس آموزش | سامانه دانشگاهی</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            min-height: 100vh;
+            background-color: #212529;
+            color: #fff;
+        }
+
+            .sidebar .nav-link {
+                color: #dee2e6;
+                padding: 12px 20px;
+                border-radius: 5px;
+                margin: 5px 10px;
+            }
+
+                .sidebar .nav-link:hover, .sidebar .nav-link.active {
+                    background-color: #0d6efd;
+                    color: #fff;
+                }
+
+        .card-stat {
+            border: none;
+            border-radius: 10px;
+            transition: transform 0.2s;
+        }
+
+            .card-stat:hover {
+                transform: translateY(-5px);
+            }
+    </style>
 </head>
 <body>
 
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse p-0 shadow">
+                <div class="position-sticky pt-3">
+                    <div class="text-center py-3 mb-4 border-bottom border-secondary">
+                        <i class="fa-solid fa-user-shield fa-3x mb-2 text-primary"></i>
+                        <h5 class="m-0">پنل کارشناس آموزش</h5>
+                        <small class="text-muted">بخش مدیریت گردش کار</small>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">
+                                <i class="fa-solid fa-folder-open me-2"></i> کارتابل درخواست‌ها
+                            </a>
+                        </li>
+                        <li class="nav-item text-danger">
+                            <a class="nav-link text-danger mt-3" href="#" onclick="logout()">
+                                <i class="fa-solid fa-right-from-bracket me-2"></i> خروج از سیستم
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h3 text-secondary">کارتابل مدیریت درخواست‌ها</h1>
+                    <span class="badge bg-secondary p-2">نقش: کارشناس آموزش</span>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="card card-stat bg-white shadow-sm p-3 border-start border-primary border-4">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h6 class="text-muted mb-1">درخواست‌های در انتظار بررسی</h6>
+                                    <h3 class="fw-bold m-0 text-primary" id="pendingCountCard">-</h3>
+                                </div>
+                                <i class="fa-solid fa-clock fa-2x text-opacity-25 text-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card card-stat bg-white shadow-sm p-3 border-start border-success border-4">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h6 class="text-muted mb-1">سیستم گردش کار</h6>
+                                    <h3 class="fw-bold m-0 text-success">فعال</h3>
+                                </div>
+                                <i class="fa-solid fa-code-branch fa-2x text-opacity-25 text-success"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white py-3 border-bottom">
+                        <h5 class="card-title fw-bold m-0 text-secondary">
+                            <i class="fa-solid fa-list-check me-2 text-primary"></i> لیست درخواست‌های ورودی به کارتابل
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0 text-center">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>شناسه</th>
+                                        <th>دانشجو</th>
+                                        <th>نوع درخواست </th>
+                                        <th>عنوان درخواست</th>
+                                        <th>تاریخ ثبت</th>
+                                        <th>وضعیت</th>
+                                        <th>عملیات بررسی</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="requestsTableBody">
+                                    <tr>
+                                        <td colspan="7" class="text-center p-4 text-muted">در حال بارگذاری کارتابل درخواست‌ها...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="reviewModalLabel">
+                        <i class="fa-solid fa-file-signature me-2"></i> بررسی و تصمیم‌گیری روی درخواست
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="fw-bold text-muted">نام دانشجو:</label>
+                            <div id="modalStudentName" class="form-control-plaintext border-bottom"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="fw-bold text-muted">نوع درخواست:</label>
+                            <div id="modalTemplateName" class="form-control-plaintext border-bottom"></div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="fw-bold text-muted">عنوان:</label>
+                            <div id="modalTitle" class="form-control-plaintext border-bottom"></div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="fw-bold text-muted">متن و توضیحات دانشجو:</label>
+                            <div id="modalDescription" class="p-3 bg-light rounded border" style="white-space: pre-wrap;"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="staffCommentInput" class="form-label fw-bold text-secondary">توضیحات یا دلیل رد/تایید کارشناس:</label>
+                        <textarea id="staffCommentInput" class="form-control" rows="3" placeholder="توضیحات اختیاری یا دلیل رد درخواست را بنویسید..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                    <div>
+                        <button type="button" class="btn btn-danger me-2" id="btnReject">
+                            <i class="fa-solid fa-xmark me-1"></i> رد درخواست
+                        </button>
+                        <button type="button" class="btn btn-success" id="btnApprove">
+                            <i class="fa-solid fa-check me-1"></i> تایید درخواست
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>const BASE_URL = 'https://localhost:7246/api';
+        let currentRequests = [];   
+        let selectedRequestId = null;
+        let reviewModalObj = null;
+
+        document.addEventListener("DOMContentLoaded", function () {
+            reviewModalObj = new bootstrap.Modal(document.getElementById('reviewModal'));
+            fetchCartable();
+        });
+
+        async function fetchCartable() {
+            const token = localStorage.getItem("token");
+            const tbody = document.getElementById("requestsTableBody");
+
+            try {
+                const response = await fetch(`${BASE_URL}/Staff/workflow-requests-cartable`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) throw new Error("خطا در دریافت اطلاعات کارتابل");
+
+                currentRequests = await response.json();
+                tbody.innerHTML = "";
+
+                if (currentRequests.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" class="text-center p-4 text-muted">هیچ درخواستی در کارتابل شما وجود ندارد.</td></tr>`;
+                    document.getElementById("pendingCountCard").innerText = "0 درخواست";
+                    return;
+                }
+
+                currentRequests.forEach(req => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${req.id}</td>
+                            <td class="fw-bold text-end">${req.studentName}</td>
+                            <td><span class="badge bg-info text-dark">${req.templateName}</span></td>
+                            <td class="text-end">${req.title}</td>
+                            <td>${req.createdAtPersian}</td>
+                            <td><span class="badge bg-warning text-dark">${req.status}</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary" onclick="openReviewModal(${req.id})">
+                                    <i class="fa-solid fa-eye-gear me-1"></i> بررسی درخواست
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                document.getElementById("pendingCountCard").innerText = `${currentRequests.length} درخواست`;
+
+            } catch (error) {
+                console.error(error);
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger p-4">⚠️ خطا در ارتباط با سرور. مطمئن شوید بک‌آند فعال است و توکن معتبر است.</td></tr>`;
+                document.getElementById("pendingCountCard").innerText = "خطا";
+            }
+        }
+
+        function openReviewModal(requestId) {
+            const request = currentRequests.find(r => r.id === requestId);
+            if (!request) return;
+
+            selectedRequestId = requestId;
+
+            document.getElementById("modalStudentName").innerText = request.studentName;
+            document.getElementById("modalTemplateName").innerText = request.templateName;
+            document.getElementById("modalTitle").innerText = request.title;
+            document.getElementById("modalDescription").innerText = request.description;
+            document.getElementById("staffCommentInput").value = request.staffComment || "";
+
+            document.getElementById("btnApprove").onclick = () => submitReview(true);
+            document.getElementById("btnReject").onclick = () => submitReview(false);
+
+            reviewModalObj.show();
+        }
+
+        async function submitReview(isApproved) {
+            const token = localStorage.getItem("token");
+            const commentValue = document.getElementById("staffCommentInput").value;
+
+            if (!isApproved && !commentValue.trim()) {
+                alert("لطفاً علت رد کردن درخواست را در بخش توضیحات بنویسید.");
+                return;
+            }
+
+            try {
+                const response = await fetch(`${BASE_URL}/Staff/review-workflow-request`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        requestId: selectedRequestId,
+                        isApproved: isApproved,
+                        comment: commentValue
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert(result.message || "عملیات با موفقیت انجام شد.");
+                    reviewModalObj.hide();
+                    fetchCartable(); 
+                } else {
+                    alert(result.message || "ثبت وضعیت درخواست با خطا مواجه شد.");
+                }
+            } catch (error) {
+                alert("خطا در اتصال به سرور.");
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem("token");
+            window.location.href = "login.html";
+        }</script>
 </body>
 </html>

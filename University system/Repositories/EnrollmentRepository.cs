@@ -45,7 +45,7 @@ namespace University_system.Repositories
                 .FirstOrDefaultAsync();
 
 
-            return await _dbSet.Include(e => e.Course).ThenInclude(c => c.Instructor).Where(e => e.StudentId == studentId && e.Course.SemesterId == activeSemester).ToListAsync(); ;
+            return await _dbSet.Include(e => e.Course).ThenInclude(c => c.Instructor).ThenInclude(i => i.User).Where(e => e.StudentId == studentId && e.Course.SemesterId == activeSemester).ToListAsync(); ;
         }
 
         public async Task<IEnumerable<Enrollment>> GetStudentCoursesByCourseIdAsync(int coursrId)

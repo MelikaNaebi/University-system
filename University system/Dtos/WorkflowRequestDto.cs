@@ -10,5 +10,7 @@
         public string CreatedAtPersian { get; set; }
         public string? StaffComment { get; set; }
         public string? ManagerComment { get; set; }
+
+        public string TemplateName { get; set; }
     }
 }

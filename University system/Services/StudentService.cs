@@ -32,28 +32,29 @@ namespace University_system.Services
 
         public async Task<FullTranscriptDto> GetFullTranscriptAsync(int studentId)
         {
-            var Enrolledcourses= await _unitOfWork.Enrollments.GetAllStudentEnrollmentsAsync(studentId);
+            var Enrolledcourses = await _unitOfWork.Enrollments.GetAllStudentEnrollmentsAsync(studentId);
+
+            var gradedEnrollments = Enrolledcourses.Where(e => e.Grade.HasValue).ToList();
 
             var coursesGroupedBySemester = Enrolledcourses.GroupBy(e => e.Course.SemesterId);
 
             var semesterTranscripts = new List<SemesterTranscriptDto>();
 
-            foreach (var semester in coursesGroupedBySemester) {
-
+            foreach (var semester in coursesGroupedBySemester)
+            {
                 var semesterDto = CalculateSemesterTranscript(semester.Key, semester);
-
                 semesterTranscripts.Add(semesterDto);
             }
 
-            int totalUnits = Enrolledcourses.Sum(e => int.Parse(e.Course.Unit));
-
-            double totalPoints = Enrolledcourses.Sum(e =>(e.Grade ??0 )* int.Parse(e.Course.Unit));
+            int totalUnits = gradedEnrollments.Sum(e => int.Parse(e.Course.Unit));
+            double totalPoints = gradedEnrollments.Sum(e => (e.Grade.Value) * int.Parse(e.Course.Unit));
 
             double totalGpa = totalUnits > 0 ? totalPoints / totalUnits : 0;
+
             return new FullTranscriptDto
             {
                 StudentId = studentId,
-                TotalGpa = totalGpa,
+                TotalGpa = Math.Round(totalGpa, 2), 
                 TotalCredits = totalUnits,
                 Semesters = semesterTranscripts
             };
@@ -142,19 +143,19 @@ namespace University_system.Services
 
         private SemesterTranscriptDto CalculateSemesterTranscript(int semesterId, IEnumerable<Enrollment> semesterEnrollments)
         {
+            var gradedEnrollments = semesterEnrollments.Where(e => e.Grade.HasValue).ToList();
 
-            int totalCredits = semesterEnrollments.Sum(e => int.Parse(e.Course.Unit));
+            int totalCredits = gradedEnrollments.Sum(e => int.Parse(e.Course.Unit));
+            double totalPoints = gradedEnrollments.Sum(e => (e.Grade.Value) * int.Parse(e.Course.Unit));
 
-            double totalPoints = semesterEnrollments.Sum(e => (e.Grade ?? 0)* int.Parse(e.Course.Unit));
-
-            double gpa = totalCredits > 0 ? totalPoints / totalCredits : 0;
+            double rawGpa = totalCredits > 0 ? totalPoints / totalCredits : 0;
+            double gpa = Math.Round(rawGpa, 2);
             return new SemesterTranscriptDto
             {
                 SemesterId = semesterId,
                 SemesterGpa = gpa,
-                SemesterCredits = totalCredits
+                SemesterCredits = semesterEnrollments.Sum(e => int.Parse(e.Course.Unit))
             };
-
         }
     }
 }

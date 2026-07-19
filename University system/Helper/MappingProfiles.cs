@@ -38,8 +38,17 @@ namespace University_system.Helper
           
             
                     CreateMap<WorkflowRequest, WorkflowRequestDto>();
-                    CreateMap<Student, StudentProfileDto>();
-                    CreateMap<Course, CourseDto>();
+
+            CreateMap<Student, StudentProfileDto>()
+                   .ForMember(dest => dest.FullName, opt => opt.MapFrom(src =>
+                       src.User != null ? $"{src.User.FirstName} {src.User.LastName}" : null))
+
+                   .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src =>
+                       src.Department != null ? src.Department.Name : null))
+
+                   .ForMember(dest => dest.MajorName, opt => opt.MapFrom(src =>
+                       src.Department != null ? src.Department.Name : null));
+            CreateMap<Course, CourseDto>();
 
             CreateMap<WorkflowRequest, WorkflowRequestDto>()
 .ForMember(dest => dest.StudentName, opt => opt.MapFrom(src =>

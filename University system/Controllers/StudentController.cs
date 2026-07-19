@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using University_system.Dtos;
 using University_system.Interface_Service;
 
@@ -14,13 +15,15 @@ namespace University_system.Controllers
         private readonly IEnrollmentService _enrollmentService;
         private readonly ICourseService _courseService;
         private readonly IWorkflowRequestService _workflowRequestService;
+        private readonly ILogger<StudentController> _logger; 
 
-        public StudentController(IStudentService studentService, IWorkflowRequestService workflowRequestService, ICourseService courseService, IEnrollmentService enrollmentService)
+        public StudentController(IStudentService studentService, ILogger<StudentController> logger, IWorkflowRequestService workflowRequestService, ICourseService courseService, IEnrollmentService enrollmentService)
         {
             _studentService = studentService;
             _enrollmentService = enrollmentService;
             _courseService = courseService;
             _workflowRequestService = workflowRequestService;
+            _logger = logger;
         }
 
         [HttpGet("Fulltranscrip")]
@@ -139,22 +142,47 @@ namespace University_system.Controllers
         }
 
         [HttpGet("my-workflow-requests")]
-        public async Task<IActionResult> GetStudentRequests([FromQuery] int studentId, [FromQuery] int semesterId)
+        public async Task<IActionResult> GetStudentRequests()
         {
-            var requests = await _workflowRequestService.GetStudentRequestsAsync(studentId, semesterId);
+            var studentIdClaim = User.FindFirst("StudentId")?.Value; 
+
+            if (string.IsNullOrEmpty(studentIdClaim))
+                return Unauthorized("کاربر شناسایی نشد.");
+
+            int studentId = int.Parse(studentIdClaim);
+            var requests = await _workflowRequestService.GetStudentRequestsAsync(studentId);
             return Ok(requests);
         }
-
         [HttpPost("submit-workflow-request")]
-        public async Task<IActionResult> CreateRequest([FromQuery] int studentId, [FromQuery] int semesterId, [FromBody] CreateWorkflowRequestDto dto)
+        public async Task<IActionResult> CreateRequest([FromBody] CreateWorkflowRequestDto dto)
         {
-            if (dto == null || string.IsNullOrEmpty(dto.Title))
-                return BadRequest("اطلاعات درخواست ناقص است.");
+            try
+            {
+                var studentIdClaim = User.FindFirst("StudentId")?.Value; 
+                if (string.IsNullOrEmpty(studentIdClaim))
+                    return Unauthorized(new { message = "کاربر شناسایی نشد." });
 
-            var success = await _workflowRequestService.CreateRequestAsync(studentId, semesterId, dto.TemplateId, dto.Title, dto.Description);
-            if (!success) return BadRequest("خطا در ثبت درخواست. لطفاً قالب انتخابی را بررسی کنید.");
+                int studentId = int.Parse(studentIdClaim);
 
-            return Ok(new { message = "درخواست با موفقیت ثبت و وارد چرخه بررسی شد." });
+                if (dto == null || string.IsNullOrEmpty(dto.Title))
+                    return BadRequest(new { message = "اطلاعات درخواست ناقص است." });
+
+                var success = await _workflowRequestService.CreateRequestAsync(studentId, dto.TemplateId, dto.Title, dto.Description);
+
+                if (!success)
+                    return BadRequest(new { message = "خطا در ثبت درخواست. لطفاً قالب انتخابی را بررسی کنید." });
+
+                return Ok(new { message = "درخواست با موفقیت ثبت و وارد چرخه بررسی شد." });
+            }
+            catch (Exception ex)
+            {
+                // ثبت خطا در لاگ سرور برای بررسی شما
+                _logger.LogError(ex, "خطا در هنگام ثبت درخواست در اکشن CreateRequest");
+
+                // بازگرداندن یک پاسخ JSON استاندارد به کلاینت
+                // این کار باعث می‌شود کلاینت به جای خطای SyntaxError، یک پاسخ قابل فهم دریافت کند
+                return StatusCode(500, new { message = "خطای داخلی سرور رخ داده است.", details = ex.Message });
+            }
         }
 
         [HttpGet("workflow-templates")]
